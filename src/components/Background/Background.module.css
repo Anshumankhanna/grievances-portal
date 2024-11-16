@@ -1,0 +1,14 @@
+.background {
+    @apply relative
+    w-full
+    flex-grow;
+
+    & > * {
+        @apply absolute
+        full
+        bg-cover
+        bg-bottom;
+
+        filter: blur(3px);
+    }
+}

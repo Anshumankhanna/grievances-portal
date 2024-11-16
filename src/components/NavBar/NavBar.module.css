@@ -1,0 +1,23 @@
+.navbar {
+    @apply flex
+    justify-start
+    items-center
+    w-full
+    h-[7.5vh]
+    bg-tertiary-color
+    font-bold;
+
+    gap: 2vw;
+    padding-left: 2vw;
+
+    & > * {
+        @apply flex
+        justify-center
+        items-center
+        h-full
+        px-2.5
+        uppercase
+        bg-transparent
+        hover:bg-black/15;
+    }
+}
