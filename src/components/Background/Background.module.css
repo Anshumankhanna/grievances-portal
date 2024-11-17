@@ -5,10 +5,9 @@
 
     & > * {
         @apply absolute
-        full
-        bg-cover
-        bg-bottom;
-
+            full
+            bg-cover
+            bg-bottom;
         filter: blur(3px);
     }
 }
