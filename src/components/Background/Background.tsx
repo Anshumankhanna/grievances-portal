@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "@/components/Background/Background.module.css"
 
 const imagesPath = "/images/";
@@ -13,17 +13,19 @@ export default function Background({
 }) {
     const [imgIndex, setImgIndex] = useState(0);
 
-    setInterval(() => {
-        setImgIndex((imgIndex + 1) % pageBgImgArr.length);
-    }, 4000);
+    useEffect(() => {
+        setTimeout(() => {
+            setImgIndex((imgIndex + 1) % pageBgImgArr.length);
+        }, 4000);
+    }, [imgIndex]);
 
     return (
         <div className={`${styles.background}`}>
-            <div
+            <div className="bg-cover bg-center blur-sm"
                 style={{
                     backgroundImage: `url(${imagesPath}${pageBgImgArr[imgIndex]})`,
                     transition: "all linear 2s",
-                    zIndex: "1",
+                    zIndex: "-1",
                 }}
             ></div>
             {children}

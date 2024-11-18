@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* added custom re-usable styling for input field in login/signup */
-.input-base {
-    @apply w-full p-2 border-slate-700 rounded-sm text-black border-b-2;
+@layer base {
+    input:focus {
+        outline: none;
+    }
 }
-
 :root {
     --background: #ffffff;
     --foreground: #171717;
