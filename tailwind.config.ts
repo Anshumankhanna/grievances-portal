@@ -10,11 +10,12 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				background: "var(--background)",
-				foreground: "var(--foreground)",
+				"background": "var(--background)",
+				"foreground": "var(--foreground)",
 				"primary-color": "var(--primary-color)",
 				"secondary-color": "var(--secondary-color)",
-				"tertiary-color": "var(--tertiary-color)"
+				"tertiary-color": "var(--tertiary-color)",
+				"panel-background": "#f1f5f9",
 			},
 			backgroundImage: {
 				"custom-gradient": 'linear-gradient(to bottom, var(--primary-color) 10%, var(--secondary-color))',

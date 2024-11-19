@@ -7,7 +7,7 @@ export default function NavBar() {
             <Link href={"/"}>Home</Link>
             <Link href={"/about"}>About</Link>
             <Link href={"/contact"}>Contact</Link>
-            <Link href={"/login"}>Sign In</Link>
+            <Link href={"/signup"}>Sign Up</Link>
         </div>
     )
 }

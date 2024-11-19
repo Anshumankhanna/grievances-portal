@@ -21,7 +21,7 @@ export default function Background({
 
     return (
         <div className={`${styles.background}`}>
-            <div className="bg-cover bg-center blur-sm"
+            <div className="bg-cover bg-center blur-sm absolute-center"
                 style={{
                     backgroundImage: `url(${imagesPath}${pageBgImgArr[imgIndex]})`,
                     transition: "all linear 2s",
