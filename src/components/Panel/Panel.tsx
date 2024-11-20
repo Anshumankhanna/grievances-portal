@@ -22,7 +22,7 @@ export default function Panel() {
                     Profile
                 </div>
             </div>
-            <div className="flex-grow text-black p-3">
+            <div className="flex-grow w-44 h-full text-black p-3">
                 {/* put profile and dashboard components here */}
                 {content === "dashboard" && <Dashboard />}
                 {content === "profile" && <Profile />}
