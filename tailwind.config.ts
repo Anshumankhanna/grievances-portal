@@ -19,11 +19,24 @@ export default {
 			},
 			backgroundImage: {
 				"custom-gradient": 'linear-gradient(to bottom, var(--primary-color) 10%, var(--secondary-color))',
-			}
+			},
+			animation: {
+				'underline-grow': 'underline-grow 0.3s ease-out forwards', // Custom animation for the underline
+			},
+			keyframes: {
+				'underline-grow': {
+					'0%': {
+						width: '0%',
+					},
+					'100%': {
+						width: '100%',
+					},
+				},
+			},
 		},
 	},
 	plugins: [
-		plugin(function({ addUtilities, addComponents }) {
+		plugin(function ({ addUtilities, addComponents }) {
 			addUtilities({
 				".full": {
 					"width": "100%",

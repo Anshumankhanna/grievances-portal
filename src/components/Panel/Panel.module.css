@@ -1,0 +1,23 @@
+.menu-div {
+    @apply bg-tertiary-color
+    w-44
+    flex
+    flex-col
+    justify-start
+    items-center
+    py-3
+    gap-3
+    text-xl
+    font-bold;
+
+    & > * {
+        @apply w-full
+        p-3
+        cursor-pointer;
+
+        &:hover {
+            @apply bg-panel-background
+            text-tertiary-color;
+        }
+    }
+}
