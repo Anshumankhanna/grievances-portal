@@ -23,7 +23,7 @@ export default {
 		},
 	},
 	plugins: [
-		plugin(function({ addUtilities }) {
+		plugin(function({ addUtilities, addComponents }) {
 			addUtilities({
 				".full": {
 					"width": "100%",
@@ -34,6 +34,14 @@ export default {
 					"top": "50%",
 					"left": "50%",
 					"transform": "translate(-50%, -50%)",
+				},
+			});
+			addComponents({
+				".darken": {
+					"background-color": "transparent",
+					"&:hover": {
+						"background-color": "rgba(0, 0, 0, 0.15)",
+					},
 				},
 			});
 		})

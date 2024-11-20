@@ -17,7 +17,6 @@
         h-full
         px-2.5
         uppercase
-        bg-transparent
-        hover:bg-black/15;
+        darken;
     }
 }
