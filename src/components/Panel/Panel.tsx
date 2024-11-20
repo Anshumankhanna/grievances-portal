@@ -11,14 +11,18 @@ export default function Panel() {
     return (
         <div className="h-full flex items-center justify-center rounded-lg bg-panel-background overflow-hidden [&_>_*]:h-full">
             <div className={`${styles["menu-div"]}`}>
-                <div onClick={() => {
-                    setContent("dashboard");
-                }}>
+                <div
+                    onClick={() => {
+                        setContent("dashboard");
+                    }}
+                >
                     Dashboard
                 </div>
-                <div onClick={() => {
-                    setContent("profile");
-                }}>
+                <div
+                    onClick={() => {
+                        setContent("profile");
+                    }}
+                >
                     Profile
                 </div>
             </div>
@@ -28,5 +32,5 @@ export default function Panel() {
                 {content === "profile" && <Profile />}
             </div>
         </div>
-    )
+    );
 }
