@@ -5,96 +5,72 @@ import { useState } from "react";
 import { useRouter } from "next/navigation"; //for navigation
 import styles from "./page.module.css";
 import DropdownMenu from "@/components/DropdownMenu/DropdownMenu";
+import Link from "next/link";
+
+type LoginData = {
+    access: string;
+    enrollmentNumber: number;
+    password: number;
+}
 
 export default function LoginPage() {
-    const [isLogin, setisLogin] = useState(true);
     const [enrollNo, setEnrollNo] = useState("");
     const [password, setPassword] = useState("");
     const [role, setRole] = useState("student"); // Default role (Dropdown can update this)
     const router = useRouter();
-    //Declaring repetitive variab;es
-    const action = isLogin ? "LOGIN" : "SIGN UP"; //change h1 tag
-    const toggleText = isLogin
-        ? "Don't have account? "
-        : "Already existing acc? "; //dynamic display prompt
-    const toggleLink = isLogin ? "Sign Up" : "Login";
+    //Declaring repetitive variables
 
     //HANDLING FORM SUBMISSION
-    const handleSub = (event: React.FormEvent) => {
+    const handleSub = async (event: React.FormEvent) => {
         event.preventDefault(); // Prevent default form submission
 
         if (role.toLowerCase() === "admin") {
             router.push("/a");
-        } else if (
-            ["student", "teacher", "parent"].includes(role.toLowerCase())
-        ) {
-            router.push(`/u/${role.toLowerCase()[0]}/${enrollNo}`);
-        } else {
-            alert("Invalid role selected. Please try again.");
         }
+        
+        router.push(`/u/${role.toLowerCase()[0]}/${enrollNo}`);
     };
     return (
-        <div className="flex items-center rounded-lg min-h-full">
-            <div className="bg-white py-3 px-4 w-96  mx-auto border rounded-lg">
-                <h1 className="text-3xl text-black text-center">{action}</h1>
+        <div className="flex justify-center items-center rounded-lg">
+            <form className="bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3" onSubmit={handleSub}>
+                <h1 className="text-3xl text-black text-center text-tertiary-color font-bold">Login</h1>
                 <DropdownMenu
                     onRoleSelect={(role) => setRole(role.toLowerCase())}
                 />
-
-                <form className="space-y-5" onSubmit={handleSub}>
-                    {!isLogin && (
-                        //only render input for Name  if isLogin is false
-                        <div>
-                            <label className="text-black">Name</label>
-                            <input
-                                type="text"
-                                className={`${styles.base}`}
-                                placeholder="Enter name"
-                                required
-                            />
-                        </div>
-                    )}
-                    {/* regardless if its for signup or login we ask email and password */}
-                    <div>
-                        <label className="text-black">Enroll. No.</label>
-                        <input
-                            type="text"
-                            className={`${styles.base}`}
-                            placeholder="Enter enrollment number"
-                            value={enrollNo}
-                            onChange={(event) => setEnrollNo(event.target.value)}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label className="text-black">Password</label>
-                        <input
-                            type="password"
-                            className={`${styles.base}`}
-                            placeholder="Enter password"
-                            value={password}
-                            onChange={(event) => setPassword(event.target.value)}
-                            required
-                        />
-                    </div>
-                    {/* submision button */}
-                    <button
-                        type="submit"
-                        className="w-full mx-auto bg-emerald-800 text-white p-2 rounded-lg"
-                    >
-                        {action}
-                    </button>
-                </form>
-                <p className="mt-4 text-center font-bold text-black">
-                    {toggleText}{" "}
-                    <span
-                        onClick={() => setisLogin(!isLogin)}
-                        className="text-slate-400 hover:text-slate-700 cursor-pointer"
-                    >
-                        {toggleLink}
-                    </span>
-                </p>
-            </div>
+                {/* regardless if its for signup or login we ask email and password */}
+                <div>
+                    <label className="text-black">Enroll. No.</label>
+                    <input
+                        type="text"
+                        className={`${styles.base}`}
+                        placeholder="Enter enrollment number"
+                        value={enrollNo}
+                        onChange={(event) => setEnrollNo(event.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label className="text-black">Password</label>
+                    <input
+                        type="password"
+                        className={`${styles.base}`}
+                        placeholder="Enter password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        required
+                    />
+                </div>
+                {/* submision button */}
+                <button
+                    type="submit"
+                    className="bg-tertiary-color text-white p-2 rounded-lg font-bold"
+                >
+                    Login
+                </button>
+                <span className="mt-4 text-center font-bold">
+                    Don&apos;t have account? <Link className="text-tertiary-color" href="/signup">Signup</Link> 
+                </span>
+            </form>
         </div>
     );
 }

@@ -5,7 +5,8 @@
     w-full
     h-16
     bg-tertiary-color
-    font-bold;
+    font-bold
+    text-white;
 
     gap: 2vw;
     padding-left: 2vw;

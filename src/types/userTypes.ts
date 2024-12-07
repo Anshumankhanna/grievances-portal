@@ -1,7 +1,7 @@
 export const UserType = {
-    s: "Student",
-    p: "Parent",
-    t: "Teacher",
+    s: "student",
+    p: "parent",
+    t: "teacher",
 } as const;
 
 export type UserProfile = {
@@ -15,5 +15,6 @@ export type UserProfile = {
     branch: string;
     yearOfGraduation: number;
 };
-// export type UserValueType = (typeof UserType)[keyof typeof UserType];
+
+export type UserValueType = (typeof UserType)[keyof typeof UserType];
 export type UserKeyType = keyof typeof UserType;

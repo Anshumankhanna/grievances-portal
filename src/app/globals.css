@@ -15,16 +15,6 @@
     --tertiary-color: #145365;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-        --primary-color: #e0543f;
-        --secondary-color: #f9c505;
-        --tertiary-color: #145365;
-    }
-}
-
 * {
     margin: 0;
     padding: 0;
