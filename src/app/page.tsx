@@ -7,12 +7,6 @@ import styles from "./page.module.css";
 import DropdownMenu from "@/components/DropdownMenu/DropdownMenu";
 import Link from "next/link";
 
-type LoginData = {
-    access: string;
-    enrollmentNumber: number;
-    password: number;
-}
-
 export default function LoginPage() {
     const [enrollNo, setEnrollNo] = useState("");
     const [password, setPassword] = useState("");
