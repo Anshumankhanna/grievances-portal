@@ -1,0 +1,19 @@
+.form-field {
+    @apply flex flex-col;
+
+    & label {
+        @apply text-xl;
+    }
+}
+
+.button-layer {
+    @apply flex justify-between;
+
+    & button {
+        @apply px-4 py-2
+        bg-tertiary-color
+        text-white font-bold
+        rounded-md
+        hover:underline;
+    }
+}

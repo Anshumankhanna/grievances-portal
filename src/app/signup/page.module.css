@@ -1,4 +1,3 @@
-/* added custom re-usable styling for input field in login/signup */
 .form div {
     @apply flex justify-between items-center gap-5 h-10;
 }

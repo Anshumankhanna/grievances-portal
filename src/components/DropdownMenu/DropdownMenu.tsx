@@ -1,6 +1,7 @@
+// since this component will always be placed inside 'client' components, we don't need to write 'use client' here.
 import React, { useState } from "react";
 
-interface DropdownMenuProps {
+type DropdownMenuProps = {
     onRoleSelect: (role: string) => void; // Callback prop to pass selected role
 }
 

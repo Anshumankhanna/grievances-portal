@@ -1,20 +1,10 @@
-export const UserType = {
-    s: "student",
-    p: "parent",
-    t: "teacher",
-} as const;
+import { UserDocument } from "@/models/User";
+import { ComplaintDataUserExtractType } from "./complaintTypes";
 
-export type UserProfile = {
-    photo: string;
-    enrollNo: number;
-    name: string;
-    motherName: string;
-    fatherName: string;
-    address: string;
-    phoneNumber: string;
-    branch: string;
-    yearOfGraduation: number;
-};
+export type TokenUserFields = Omit<UserDocument, "password">;
+export type UserDataFields = Omit<UserDocument, "_id" | "complaints"> & {
+    _id: string
+    complaints: ComplaintDataUserExtractType[];
+}
 
-export type UserValueType = (typeof UserType)[keyof typeof UserType];
-export type UserKeyType = keyof typeof UserType;
+export type UserDataAdminExtractType = Pick<UserDocument, "uniqueId" | "name" | "email" | "mobile">;

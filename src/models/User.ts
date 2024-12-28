@@ -1,17 +1,19 @@
-import { UserType } from "@/types/userTypes";
-import { emailRegex, enrollmentNumberRegex } from "@/utils/regex";
-import { Schema, model } from "mongoose";
+import { RoleKeys, RoleKeyType } from "@/types/roleTypes";
+import { CategoryKeys, CategoryKeyType } from "@/types/categoryTypes";
+import mongoose, { Schema, model } from "mongoose";
 
-export type UserDocument = {
+export interface UserDocument {
     // putting an 'id' is compulsory, otherwise Next.js becomes a baby.
     id: string;
-    access: string;
-    enrollmentNumber: number;
-    fullname: string;
+    // this is necessary
+    _id: Schema.Types.ObjectId;
+    role: RoleKeyType;
+    category: CategoryKeyType;
+    uniqueId: string;
+    name: string;
     email: string;
     mobile: number;
     password: string;
-    profilePicture: string;
     complaints: Schema.Types.ObjectId[];
     createdAt: Date;
     updatedAt: Date;
@@ -19,57 +21,58 @@ export type UserDocument = {
 
 const UserSchema = new Schema<UserDocument>(
     {
-        access: {
+        role: {
             type: String,
-            enum: Object.values(UserType),
+            enum: RoleKeys,
+            default: "user",
+        },
+        category: {
+            type: String,
+            enum: CategoryKeys,
             required: true,
+        },
+        uniqueId: {
+            type: String,
+            unique: true,
+            required: true,
+            // validate: {
+            //     validator: function (value: number) {
+            //         return enrollmentNumberRegex.test(value.toString());
+            //     },
+            //     message: "Enrollment number is invalid",
+            // },
+        },
+        name: {
+            type: String,
+            required: [true, "Name is required"],
         },
         email: {
             type: String,
             unique: true,
             required: [true, "Email is required"],
-            match: [
-                emailRegex,
-                "Email is invalid",
-            ],
+            // match: [
+            //     emailRegex,
+            //     "Email is invalid",
+            // ],
+        },
+        mobile: {
+            type: Number,
+            required: true,
+            // validate: {
+            //     validator: function (value: number) {
+            //         return value.toString().length === 10;
+            //     },
+            //     message: "Mobile number is invalid"
+            // }
         },
         password: {
             type: String,
             required: true,
         },
-        fullname: {
-            type: String,
-            required: [true, "Name is required"],
-        },
-        enrollmentNumber: {
-            type: Number,
-            unique: true,
-            required: true,
-            validate: {
-                validator: function (value: number) {
-                    return enrollmentNumberRegex.test(value.toString());
-                },
-                message: "Enrollment number is invalid",
-            },
-        },
-        mobile: {
-            type: Number,
-            required: true,
-            validate: {
-                validator: function (value: number) {
-                    return value.toString().length === 10;
-                },
-                message: "Mobile number is invalid"
-            }
-        },
-        profilePicture: {
-            type: String,
-            default: "",
-        },
         complaints: [
             {
                 type: Schema.Types.ObjectId,
-                ref: "complaint",
+                ref: "Complaint",
             },
         ],
     },
@@ -78,4 +81,6 @@ const UserSchema = new Schema<UserDocument>(
     }
 );
 
-export default model<UserDocument>("User", UserSchema);
+const User = mongoose.models?.User || model<UserDocument>("User", UserSchema);
+
+export default User;

@@ -1,45 +1,81 @@
 //Login page
-
 "use client";
+
 import { useState } from "react";
-import { useRouter } from "next/navigation"; //for navigation
+// import { useRouter } from "next/navigation"; //for navigation
 import styles from "./page.module.css";
-import DropdownMenu from "@/components/DropdownMenu/DropdownMenu";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import getBasePath from "@/utils/getBasePath";
+import { useBasePathContext } from "@/context/BasePathContext";
+
+export type LoginData = {
+    uniqueId: string;
+    password: string;
+};
+
+export const BlankLoginData = {
+    uniqueId: "",
+    password: "",
+};
 
 export default function LoginPage() {
-    const [enrollNo, setEnrollNo] = useState("");
-    const [password, setPassword] = useState("");
-    const [role, setRole] = useState("student"); // Default role (Dropdown can update this)
+    const [formData, setFormData] = useState<LoginData>(BlankLoginData);
     const router = useRouter();
-    //Declaring repetitive variables
+    const { setBasePath } = useBasePathContext();
 
-    //HANDLING FORM SUBMISSION
-    const handleSub = async (event: React.FormEvent) => {
-        event.preventDefault(); // Prevent default form submission
+    const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+        const { name, value } = event.target;
+        let inputValue= value;
 
-        if (role.toLowerCase() === "admin") {
-            router.push("/a");
+        if (name === "uniqueId") {
+            inputValue = inputValue.slice(0, 11);
         }
+
+        setFormData({
+            ...formData,
+            [name]: inputValue
+        })
+    }
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault(); // Prevent default form submission
         
-        router.push(`/u/${role.toLowerCase()[0]}/${enrollNo}`);
+        const result = await signIn("credentials", {
+            uniqueId: formData.uniqueId,
+            password: formData.password,
+            redirect: false,
+        });
+        
+        if (result === undefined) {
+            console.log("Sign In failed");
+        } else if (result.error) {
+            console.error(result.error);
+        } else if (result.ok) {
+            const { error, result } = await getBasePath(formData.uniqueId);
+
+            if (error !== null) {
+                console.error(error);
+            } else {
+                console.log(`Get base path result = ${result}`);
+                setBasePath(result);
+                router.push(result);
+            }
+        }
     };
     return (
         <div className="flex justify-center items-center rounded-lg">
-            <form className="bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3" onSubmit={handleSub}>
+            <form className={`bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3 ${styles.form}`} onSubmit={handleSubmit}>
                 <h1 className="text-3xl text-black text-center text-tertiary-color font-bold">Login</h1>
-                <DropdownMenu
-                    onRoleSelect={(role) => setRole(role.toLowerCase())}
-                />
-                {/* regardless if its for signup or login we ask email and password */}
                 <div>
-                    <label className="text-black">Enroll. No.</label>
+                    <label className="text-black">Unique ID</label>
                     <input
-                        type="text"
-                        className={`${styles.base}`}
-                        placeholder="Enter enrollment number"
-                        value={enrollNo}
-                        onChange={(event) => setEnrollNo(event.target.value)}
+                        type="number"
+                        name="uniqueId"
+                        id="uniqueId"
+                        placeholder="Enter your unique ID"
+                        value={formData.uniqueId}
+                        onChange={handleFormDataChange}
                         required
                     />
                 </div>
@@ -47,14 +83,14 @@ export default function LoginPage() {
                     <label className="text-black">Password</label>
                     <input
                         type="password"
-                        className={`${styles.base}`}
+                        name="password"
+                        id="password"
                         placeholder="Enter password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
+                        value={formData.password}
+                        onChange={handleFormDataChange}
                         required
                     />
                 </div>
-                {/* submision button */}
                 <button
                     type="submit"
                     className="bg-tertiary-color text-white p-2 rounded-lg font-bold"
