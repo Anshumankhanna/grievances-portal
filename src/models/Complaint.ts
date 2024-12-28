@@ -31,7 +31,7 @@ const ComplaintSchema = new Schema<ComplaintDocument>(
         },
         status: {
             type: String,
-            // enum: StatusKeys,
+            enum: StatusKeys,
             default: "unresolved"
         }
     },

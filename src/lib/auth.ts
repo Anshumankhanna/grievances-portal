@@ -3,6 +3,7 @@ import User, { UserDocument } from "@/models/User";
 import type { NextAuthOptions } from "next-auth";
 import credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import { Schema } from "mongoose";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -23,7 +24,8 @@ export const authOptions: NextAuthOptions = {
                 const user = await User
                     .findOne({
                         uniqueId: credentials.uniqueId,
-                    });
+                    })
+                    .select("_id uniqueId password");
 
                 if (!user) throw new Error("User not found");
 
@@ -42,6 +44,7 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user }) {
             if (user) {
                 token.uniqueId = user.uniqueId;
+                token._id = user._id;
             }
 
             return token;
@@ -49,6 +52,7 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             if (token) {
                 session.user.uniqueId = token.uniqueId as string;
+                session.user._id = token._id as Schema.Types.ObjectId;
             }
 
             return session;

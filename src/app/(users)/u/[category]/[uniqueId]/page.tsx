@@ -58,11 +58,18 @@ export default function Page() {
     };
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
+        setFormData({
+            subject: formData.subject.trim(),
+            description: formData.description.trim(),
+        });
+        
         const { error, result } = await addComplaint(formData);
 
         if (error !== null) {
-            
+            console.log(error);
+        } else {
+            setDialogState(false);
+            console.log(result);
         }
     };
 
@@ -89,7 +96,10 @@ export default function Page() {
                         New complaint
                     </button>
                     <dialog open={dialogState} className="absolute-center w-[50%] h-[80%]">
-                        <form className="p-3 flex flex-col gap-2 full">
+                        <form
+                            className="p-3 flex flex-col gap-2 full"
+                            onSubmit={handleSubmit}
+                        >
                             <div className={`${styles["form-field"]}`}>
                                 <label htmlFor="subject">Subject:</label>
                                 <input
