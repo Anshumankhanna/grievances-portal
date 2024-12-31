@@ -11,7 +11,8 @@ export type StatusValueType = (typeof Statuses)[keyof typeof Statuses];
 export const StatusKeys: StatusKeyType[] = Object.keys(Statuses) as StatusKeyType[];
 export const StatusValues: StatusValueType[] = Object.values(Statuses) as StatusValueType[];
 
-export const ComplaintDetails = "subject description createdAt status";
+export const ComplaintDetailsArray: (keyof ComplaintDocument)[] = ["subject", "description", "createdAt", "status"];
+export const ComplaintDetailsString = ComplaintDetailsArray.join(" ");
 export type ComplaintDataFillType = Pick<ComplaintDocument, "subject" | "description">;
 
 export type ComplaintDataUserExtractType = ComplaintDataFillType & {

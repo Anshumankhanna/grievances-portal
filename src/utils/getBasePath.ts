@@ -2,8 +2,8 @@
 
 import { getSession } from "next-auth/react";
 import getUserDetails from "@/utils/getUserDetails";
-import { RoleKeyType, Roles } from "@/types/roleTypes";
-import { Categories, CategoryKeyType } from "@/types/categoryTypes";
+import { Roles } from "@/types/roleTypes";
+import { Categories } from "@/types/categoryTypes";
 import makePath from "./makePath";
 import { OutputType } from "@/types/outputType";
 

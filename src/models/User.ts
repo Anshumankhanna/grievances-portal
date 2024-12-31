@@ -1,10 +1,8 @@
 import { RoleKeys, RoleKeyType } from "@/types/roleTypes";
 import { CategoryKeys, CategoryKeyType } from "@/types/categoryTypes";
-import mongoose,    { Schema, model } from "mongoose";
+import mongoose, { Schema, model, Document } from "mongoose";
 
-export interface UserDocument {
-    // putting an 'id' is compulsory, otherwise Next.js becomes a baby.
-    id: string;
+export type UserDocument = Document & {
     // this is necessary
     _id: Schema.Types.ObjectId;
     role: RoleKeyType;

@@ -39,6 +39,7 @@ export default async function addComplaint(complaintData: ComplaintDataFillType)
         });
 
         user.complaints.push(complaint._id);
+
         await complaint.save();
         await user.save();
 

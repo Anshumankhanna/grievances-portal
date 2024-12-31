@@ -4,20 +4,20 @@ import getUserDetails from "@/utils/getUserDetails";
 import { getSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import { ComplaintDataFillType } from "@/types/complaintTypes";
+import { ComplaintDataFillType, ComplaintDataUserExtractType } from "@/types/complaintTypes";
 import addComplaint from "@/actions/addComplaint";
 
 type UserData = {
     uniqueId: string;
     name: string;
-    // complaints: string[];
+    complaints: ComplaintDataUserExtractType[];
 }
 
 export default function Page() {
     const [userData, setUserData] = useState<UserData>({
         uniqueId: "",
         name: "",
-        // complaints: [],
+        complaints: [],
     });
     const [formData, setFormData] = useState<ComplaintDataFillType>({
         subject: "",
@@ -43,7 +43,7 @@ export default function Page() {
             setUserData({
                 uniqueId: result.uniqueId,
                 name: result.name,
-                // complaints: result.complaints,
+                complaints: result.complaints,
             })
         })()
     }, []);
@@ -136,13 +136,14 @@ export default function Page() {
                 </div>
             </div>
             {/* this is where the content is displayed */}
-            {/* <div className="flex-grow h-72 overflow-y-auto p-3">
+            <div className="flex-grow h-72 overflow-y-auto p-3">
+                {/* add all data here in a well displayed manner */}
                 {userData.complaints.length > 0 &&
                     userData.complaints.map(elem => ( //eslint-disable-line
-                        <div key={1}>hello</div>
+                        <div key={1}>{elem.subject}</div>
                     ))
                 }
-            </div> */}
+            </div>
         </div>
     )
 };

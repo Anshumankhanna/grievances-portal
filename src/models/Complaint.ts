@@ -2,8 +2,6 @@ import { StatusKeys, StatusKeyType } from "@/types/complaintTypes";
 import mongoose, { model, Schema } from "mongoose";
 
 export type ComplaintDocument = {
-    // this is for next js,
-    id: string;
     // this is for mongodb.
     _id: Schema.Types.ObjectId;
     user: Schema.Types.ObjectId;
