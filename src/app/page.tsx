@@ -6,9 +6,8 @@ import { useState } from "react";
 import styles from "./page.module.css";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import getBasePath from "@/utils/getBasePath";
-import { useBasePathContext } from "@/context/BasePathContext";
+// import { useRouter } from "next/navigation";
+// import { useBasePathContext } from "@/context/BasePathContext";
 
 export type LoginData = {
     uniqueId: string;
@@ -22,8 +21,8 @@ export const BlankLoginData = {
 
 export default function LoginPage() {
     const [formData, setFormData] = useState<LoginData>(BlankLoginData);
-    const router = useRouter();
-    const { setBasePath } = useBasePathContext();
+    // const router = useRouter();
+    // const { setBasePath } = useBasePathContext();
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
         const { name, value } = event.target;
@@ -52,15 +51,21 @@ export default function LoginPage() {
         } else if (result.error) {
             console.error(result.error);
         } else if (result.ok) {
-            const { error, result } = await getBasePath(formData.uniqueId);
+            // const { error, result } = await getBasePath(formData.uniqueId);
 
-            if (error !== null) {
-                console.error(error);
-            } else {
-                console.log(`Get base path result = ${result}`);
-                setBasePath(result);
-                router.push(result);
-            }
+            // if (error !== null) {
+            //     console.error(error);
+            // } else {
+            //     console.log(`Get base path result = ${result}`);
+            //     setBasePath(result);
+            //     router.push(result);
+            // }
+            
+            // const response = await fetch("/api/auth/users/get-user-details?message=this is good&showoff=genius");
+            // const data = await response.json();
+
+            // console.log(data);
+            console.log(output);
         }
     };
     return (

@@ -6,8 +6,10 @@ import { ComplaintDetails } from "@/types/complaintTypes";
 import { OutputType } from "@/types/outputType";
 import { UserDataFields } from "@/types/userTypes";
 
-export default async function getUserDetails(uniqueId: string, ...details: (keyof UserDocument)[]): Promise<OutputType<Partial<UserDataFields>>> {
-    const output: OutputType<Partial<UserDataFields>> = {
+type resultType = Partial<UserDataFields>;
+
+export default async function getUserDetails(uniqueId: string, ...details: (keyof UserDocument)[]): Promise<OutputType<resultType>> {
+    const output: OutputType<resultType> = {
         error: null,
         result: {},
     }
@@ -15,24 +17,26 @@ export default async function getUserDetails(uniqueId: string, ...details: (keyo
     try {
         await connectDB();
 
-        const user = await User
+        const user = details.includes("complaints")? await User
         .findOne({ uniqueId })
+        .select(details.join(" "))
+        .populate({
+            path: "complaints",
+            select: ComplaintDetails,
+        }):
+        await User.findOne({ uniqueId })
         .select(details.join(" "));
-        // .populate({
-        //     path: "complaints",
-        //     select: ComplaintDetails,
-        // });
+
+        console.log(user);
         
         if (user === null) {
             output.error = "An error occured in finding user";
         } else {
-            const plainUser = user.toObject();
+            for (const key of details) {
+                output.result[key as keyof resultType] = user[key];
+            }
 
-            // Map or transform data if needed, particularly for fields like `_id` and `complaints`
-            output.result = {
-                ...plainUser,
-                _id: plainUser._id.toString(),
-            };
+            console.log(output.result);
         }
     } catch (error) {
         console.error(error);

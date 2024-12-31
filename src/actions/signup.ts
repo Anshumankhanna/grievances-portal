@@ -2,7 +2,7 @@
 
 import { UserData } from "@/app/signup/page";
 import { connectDB } from "@/lib/mongodb";
-import User, { UserDocument } from "@/models/User";
+import User from "@/models/User";
 import { OutputType } from "@/types/outputType";
 import bcrypt from "bcryptjs";
 
