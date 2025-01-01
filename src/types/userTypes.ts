@@ -7,3 +7,4 @@ export type UserDataUserExtractType = Omit<UserDocument, "complaints"> & {
     complaints: ComplaintDataUserExtractType[];
 }
 export type UserDataAdminExtractType = Pick<UserDocument, "uniqueId" | "name" | "email" | "mobile">;
+

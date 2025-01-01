@@ -1,10 +1,10 @@
 import { RoleKeys, RoleKeyType } from "@/types/roleTypes";
 import { CategoryKeys, CategoryKeyType } from "@/types/categoryTypes";
-import mongoose, { Schema, model, Document } from "mongoose";
+import mongoose, { Schema, model, Document, ObjectId } from "mongoose";
 
 export type UserDocument = Document & {
     // this is necessary
-    _id: Schema.Types.ObjectId;
+    _id: ObjectId;
     role: RoleKeyType;
     category: CategoryKeyType;
     uniqueId: string;
@@ -12,7 +12,7 @@ export type UserDocument = Document & {
     email: string;
     mobile: number;
     password: string;
-    complaints: Schema.Types.ObjectId[];
+    complaints: ObjectId[];
     createdAt: Date;
     updatedAt: Date;
 }

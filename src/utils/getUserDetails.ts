@@ -5,6 +5,7 @@ import User, { UserDocument } from "@/models/User";
 import { ComplaintDetailsString } from "@/types/complaintTypes";
 import { OutputType } from "@/types/outputType";
 import { UserDataUserExtractType } from "@/types/userTypes";
+import fixForDate from "./fixDateType";
 
 type resultType = Partial<UserDataUserExtractType>;
 
@@ -32,11 +33,12 @@ export default async function getUserDetails(uniqueId: string, ...details: (keyo
             });
         }
 
-        output.result = JSON.parse(JSON.stringify(user as unknown as UserDataUserExtractType));
+        output.result = (JSON.parse(JSON.stringify(user)));
+        fixForDate(output.result);
     } catch (error) {
         console.error(error);
         output.error = "An error occured in catch";
     }
-
+    
     return output;
 }

@@ -16,7 +16,6 @@ export default async function addComplaint(complaintData: ComplaintDataFillType)
 
     // Use the session cookie to retrieve the session
     const session = await getServerSession(authOptions);
-    console.log(session);
 
     if (session === null) {
         output.error = "Session not found";

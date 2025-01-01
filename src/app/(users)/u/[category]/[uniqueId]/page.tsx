@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { ComplaintDataFillType, ComplaintDataUserExtractType } from "@/types/complaintTypes";
 import addComplaint from "@/actions/addComplaint";
+import formatDate from "@/utils/formatDate";
 
 type UserData = {
     uniqueId: string;
@@ -46,7 +47,7 @@ export default function Page() {
                 complaints: result.complaints,
             })
         })()
-    }, []);
+    }, [dialogState]);
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
@@ -63,13 +64,12 @@ export default function Page() {
             description: formData.description.trim(),
         });
         
-        const { error, result } = await addComplaint(formData);
+        const { error, result } = await addComplaint(formData); //eslint-disable-line
 
         if (error !== null) {
             console.log(error);
         } else {
             setDialogState(false);
-            console.log(result);
         }
     };
 
@@ -88,7 +88,13 @@ export default function Page() {
                 </div>
                 <div className="flex justify-center items-center">
                     <button
-                        className="bg-tertiary-color rounded-md px-6 py-3 font-semibold underline text-white"
+                        className="
+                            bg-tertiary-color
+                            rounded-md
+                            px-6 py-3
+                            font-semibold text-white
+                            hover:underline hover:bg-cyan-700
+                        "
                         onClick={() => {
                             setDialogState(!dialogState);
                         }}
@@ -114,7 +120,7 @@ export default function Page() {
                             <div className={`${styles["form-field"]} flex-grow`}>
                                 <label htmlFor="description">Description:</label>
                                 <textarea
-                                    className="full text-black p-1"
+                                    className="full text-black"
                                     name="description"
                                     id="description"
                                     value={formData.description}
@@ -138,11 +144,43 @@ export default function Page() {
             {/* this is where the content is displayed */}
             <div className="flex-grow h-72 overflow-y-auto p-3">
                 {/* add all data here in a well displayed manner */}
-                {userData.complaints.length > 0 &&
+                {/* {userData.complaints.length > 0 &&
                     userData.complaints.map(elem => ( //eslint-disable-line
                         <div key={1}>{elem.subject}</div>
                     ))
-                }
+                } */}
+
+                <div
+                    className={`${styles["table-grid"]}`}
+                >
+                    <div>
+                        <div>
+                            S.no.
+                        </div>
+                        <div>
+                            Subject
+                        </div>
+                        <div>
+                            Description
+                        </div>
+                        <div>
+                            Status
+                        </div>
+                        <div>
+                            Created
+                        </div>
+                    </div>
+                    {userData.complaints.length > 0 &&
+                        userData.complaints.map((
+                            elem: ComplaintDataUserExtractType,
+                            rowIndex: number
+                        ) => 
+                            <div key={rowIndex}>
+                                {/* write here how to display data */}
+                            </div>
+                        )
+                    }
+                </div>
             </div>
         </div>
     )

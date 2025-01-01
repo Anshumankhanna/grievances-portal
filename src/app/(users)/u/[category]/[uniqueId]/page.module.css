@@ -17,3 +17,45 @@
         hover:underline;
     }
 }
+
+.table-grid {
+    @apply grid rounded-md overflow-hidden;
+
+    & > div {
+        @apply grid;
+        grid-template-columns: 1fr 3fr 7fr 2fr 2fr;
+
+        & > div {
+            @apply p-1 border border-r-slate-400;
+            word-break: break-all;
+        }
+
+        & > div:nth-child(1),
+        & > div:nth-last-child(1),
+        & > div:nth-last-child(2) {
+            @apply text-center;
+        }
+
+        & > div:nth-last-child(1) {
+            @apply border-none;
+        }
+    }
+
+    & > div:nth-child(1) {
+        @apply font-bold text-white text-center
+        bg-tertiary-color
+        rounded-t-md;
+
+        & > div {
+            @apply border-cyan-700;
+        }
+    }
+
+    & > div:nth-last-child(1) {
+        @apply rounded-b-md;
+    }
+
+    & > div:nth-child(even) {
+        @apply bg-gray-200;
+    }
+}

@@ -1,10 +1,10 @@
 import { StatusKeys, StatusKeyType } from "@/types/complaintTypes";
-import mongoose, { model, Schema } from "mongoose";
+import mongoose, { model, ObjectId, Schema } from "mongoose";
 
 export type ComplaintDocument = {
     // this is for mongodb.
-    _id: Schema.Types.ObjectId;
-    user: Schema.Types.ObjectId;
+    _id: ObjectId;
+    user: ObjectId;
     subject: string;
     description: string;
     status: StatusKeyType;

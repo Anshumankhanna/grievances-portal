@@ -3,7 +3,7 @@ import User from "@/models/User";
 import type { NextAuthOptions } from "next-auth";
 import credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { Schema } from "mongoose";
+import { ObjectId } from "mongoose";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -52,7 +52,7 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             if (token) {
                 session.user.uniqueId = token.uniqueId as string;
-                session.user._id = token._id as Schema.Types.ObjectId;
+                session.user._id = token._id as ObjectId;
             }
 
             return session;
