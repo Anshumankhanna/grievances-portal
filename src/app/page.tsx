@@ -6,8 +6,6 @@ import styles from "./page.module.css";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useBasePathContext } from "@/context/BasePathContext";
-import getBasePath from "@/utils/getBasePath";
 
 export type LoginData = {
     uniqueId: string;
@@ -22,7 +20,6 @@ export const BlankLoginData = {
 export default function LoginPage() {
     const [formData, setFormData] = useState<LoginData>(BlankLoginData);
     const router = useRouter();
-    const { setBasePath } = useBasePathContext();
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
         const { name, value } = event.target;
@@ -51,14 +48,7 @@ export default function LoginPage() {
         } else if (result.error) {
             console.error(result.error);
         } else if (result.ok) {
-            const { error, result } = await getBasePath(formData.uniqueId);
-
-            if (error !== null) {
-                console.error(error);
-            } else {
-                setBasePath(result);
-                router.push(result);
-            }
+            router.push("/u");
         }
     };
     return (

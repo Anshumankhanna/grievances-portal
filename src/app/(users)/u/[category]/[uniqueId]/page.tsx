@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { ComplaintDataFillType, ComplaintDataUserExtractType } from "@/types/complaintTypes";
 import addComplaint from "@/actions/addComplaint";
-import formatDate from "@/utils/formatDate";
+import formatDate from "@/utils/formatDate"; //eslint-disable-line
 
 type UserData = {
     uniqueId: string;

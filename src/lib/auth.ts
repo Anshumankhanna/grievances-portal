@@ -4,6 +4,7 @@ import type { NextAuthOptions } from "next-auth";
 import credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { ObjectId } from "mongoose";
+import getBasePath from "@/utils/getBasePath";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -45,6 +46,14 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 token.uniqueId = user.uniqueId;
                 token._id = user._id;
+                
+                const { error, result } = await getBasePath(user.uniqueId);
+
+                if (error !== null) {
+                    token.basePath = "/";
+                } else {
+                    token.basePath = result;
+                }
             }
 
             return token;
@@ -53,6 +62,7 @@ export const authOptions: NextAuthOptions = {
             if (token) {
                 session.user.uniqueId = token.uniqueId as string;
                 session.user._id = token._id as ObjectId;
+                session.user.basePath = token.basePath as string;
             }
 
             return session;

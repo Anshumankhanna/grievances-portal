@@ -1,11 +1,11 @@
 "use server";
 
-import { getSession } from "next-auth/react";
 import getUserDetails from "@/utils/getUserDetails";
 import { Roles } from "@/types/roleTypes";
 import { Categories } from "@/types/categoryTypes";
 import makePath from "./makePath";
 import { OutputType } from "@/types/outputType";
+import { getServerSession } from "next-auth";
 
 export default async function getBasePath(uniqueId?: string): Promise<OutputType<string>> {
     const output: OutputType<string> = {
@@ -14,7 +14,7 @@ export default async function getBasePath(uniqueId?: string): Promise<OutputType
     };
 
     if (uniqueId === undefined) {
-        const session = await getSession();
+        const session = await getServerSession();
 
         if (session === null) {
             output.error = "An error occured";

@@ -6,7 +6,6 @@ import NavBar from "@/components/NavBar/NavBar";
 import Footer from "@/components/Footer/Footer";
 import Background from "@/components/Background/Background";
 import { Provider } from "./provider";
-import BasePathContext from "@/context/BasePathContext";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -34,14 +33,12 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col bg-black`}
             >
-                <BasePathContext>
-                    <Provider>
-                        <Banner />
-                        <NavBar />
-                        <Background>{children}</Background>
-                        <Footer />
-                    </Provider>
-                </BasePathContext>
+                <Provider>
+                    <Banner />
+                    <NavBar />
+                    <Background>{children}</Background>
+                    <Footer />
+                </Provider>
             </body>
         </html>
     );
