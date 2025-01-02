@@ -1,24 +1,22 @@
 "use client";
 
-import { useBasePathContext } from "@/context/BasePathContext";
 import { useRouter } from "next/navigation";
 
 export default function UserMenu() {
     const router = useRouter();
-    const { basePath } = useBasePathContext();
 
     return (
         <div className="menu-div">
             <div
                 onClick={() => {
-                    router.push(`${basePath}`);
+                    router.push("/");
                 }}
             >
                 Dashboard
             </div>
             <div
                 onClick={() => {
-                    router.push(`${basePath}/profile`)
+                    router.push("/profile")
                 }}
             >
                 Profile

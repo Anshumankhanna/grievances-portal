@@ -6,19 +6,10 @@ import styles from "./page.module.css";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
-export type LoginData = {
-    uniqueId: string;
-    password: string;
-};
-
-export const BlankLoginData = {
-    uniqueId: "",
-    password: "",
-};
+import { UserDataLoginDefault, UserDataLoginType } from "@/types/userTypes";
 
 export default function LoginPage() {
-    const [formData, setFormData] = useState<LoginData>(BlankLoginData);
+    const [formData, setFormData] = useState<UserDataLoginType>(UserDataLoginDefault);
     const router = useRouter();
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {

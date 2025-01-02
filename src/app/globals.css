@@ -15,6 +15,22 @@
     --tertiary-color: #145365;
 }
 
+::-webkit-scrollbar {
+    @apply w-2;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-gray-500 rounded-xl;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-gray-200 rounded-xl;
+}
+
+::-webkit-scrollbar-button {
+    @apply hidden;
+}
+
 * {
     margin: 0;
     padding: 0;

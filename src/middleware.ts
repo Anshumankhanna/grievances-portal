@@ -16,6 +16,9 @@ export default async function middleware(req: NextRequest) {
     if (requestedPath.match(basePathRegex)) {
         return NextResponse.redirect(new URL(token.basePath, req.url));
     }
+    if (requestedPath === "/profile") {
+        return NextResponse.redirect(new URL(`${token.basePath}/profile`, req.url));
+    }
 
     return NextResponse.next();
 }

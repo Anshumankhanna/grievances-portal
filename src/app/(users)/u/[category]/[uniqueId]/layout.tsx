@@ -6,7 +6,7 @@ export default async function UserLayout({
 }: ChildrenType
 ) {
     return (
-        <div className="h-full flex items-center justify-center rounded-lg bg-panel-background overflow-hidden [&_>_*]:h-full">
+        <div className="h-full flex items-center justify-start rounded-lg bg-panel-background overflow-hidden [&_>_*]:h-full">
             <UserMenu />
             {children}
         </div>

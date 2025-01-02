@@ -5,27 +5,10 @@ import styles from "./page.module.css";
 import Link from "next/link";
 import { signup } from "@/actions/signup";
 import { useRouter } from "next/navigation";
-
-export type UserData = {
-    category: string;
-    uniqueId: string;
-    name: string;
-    email: string;
-    mobile: number;
-    password: string;
-}
-
-export const BlankUserData = {
-    category: "select",
-    uniqueId: "",
-    name: "",
-    email: "",
-    mobile: 0,
-    password: "",
-};
+import { UserDataFillDefault, UserDataFillType } from "@/types/userTypes";
 
 export default function Page() {
-    const [formData, setFormData] = useState<UserData>(BlankUserData);
+    const [formData, setFormData] = useState<UserDataFillType>(UserDataFillDefault);
     const [error, setError] = useState<string>("");
     const router = useRouter();
 

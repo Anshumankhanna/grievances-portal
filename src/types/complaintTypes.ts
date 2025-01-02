@@ -5,6 +5,10 @@ export const Statuses = {
     unresolved: "unresolved",
     resolved: "resolved",
 } as const;
+export const StatusColor = {
+    unresolved: "#dc2626",
+    resolved: "#22c55e",
+} as const;
 
 export type StatusKeyType = keyof typeof Statuses;
 export type StatusValueType = (typeof Statuses)[keyof typeof Statuses];
@@ -16,6 +20,7 @@ export const ComplaintDetailsString = ComplaintDetailsArray.join(" ");
 export type ComplaintDataFillType = Pick<ComplaintDocument, "subject" | "description">;
 
 export type ComplaintDataUserExtractType = ComplaintDataFillType & {
+    _id: string;
     status: StatusKeyType;
     createdAt: Date;
 }

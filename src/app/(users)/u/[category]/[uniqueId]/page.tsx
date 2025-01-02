@@ -4,22 +4,14 @@ import getUserDetails from "@/utils/getUserDetails";
 import { getSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import { ComplaintDataFillType, ComplaintDataUserExtractType } from "@/types/complaintTypes";
+import { ComplaintDataFillType, ComplaintDataUserExtractType, StatusColor, StatusKeyType } from "@/types/complaintTypes";
 import addComplaint from "@/actions/addComplaint";
 import formatDate from "@/utils/formatDate"; //eslint-disable-line
-
-type UserData = {
-    uniqueId: string;
-    name: string;
-    complaints: ComplaintDataUserExtractType[];
-}
+import capitalize from "@/utils/capitalize";
+import { UserDataDashboardDefault, UserDataDashboardType } from "@/types/userTypes";
 
 export default function Page() {
-    const [userData, setUserData] = useState<UserData>({
-        uniqueId: "",
-        name: "",
-        complaints: [],
-    });
+    const [userData, setUserData] = useState<UserDataDashboardType>(UserDataDashboardDefault);
     const [formData, setFormData] = useState<ComplaintDataFillType>({
         subject: "",
         description: "",
@@ -81,65 +73,68 @@ export default function Page() {
             "
         >
             {/* this is the nav-strip */}
-            <div className="h-24 flex justify-between px-10 py-5">
-                <div className="flex flex-col justify-between">
-                    <div>{userData.name}</div>
-                    <div className="text-blue-400">{userData.uniqueId}</div>
+            <div className="h-24 flex justify-between items-center px-10 py-5">
+                <div className="flex flex-col justify-between h-full text-xl">
+                    <div>
+                        <span className="font-bold">Name:</span> {userData.name}
+                    </div>
+                    <div>
+                        <span className="font-bold">ID:</span> <span className="text-blue-400">{userData.uniqueId}</span>
+                    </div>
                 </div>
-                <div className="flex justify-center items-center">
-                    <button
-                        className="
-                            bg-tertiary-color
-                            rounded-md
-                            px-6 py-3
-                            font-semibold text-white
-                            hover:underline hover:bg-cyan-700
-                        "
-                        onClick={() => {
-                            setDialogState(!dialogState);
-                        }}
+                <button
+                    className="
+                        bg-tertiary-color
+                        rounded-md
+                        px-6 py-3
+                        h-fit
+                        font-semibold text-white
+                        hover:underline hover:bg-cyan-700
+                    "
+                    onClick={() => {
+                        setDialogState(!dialogState);
+                    }}
+                >
+                    New complaint
+                </button>
+                <dialog open={dialogState} className="absolute-center w-[50%] h-[80%]">
+                    <form
+                        className="p-3 flex flex-col gap-2 full"
+                        onSubmit={handleSubmit}
                     >
-                        New complaint
-                    </button>
-                    <dialog open={dialogState} className="absolute-center w-[50%] h-[80%]">
-                        <form
-                            className="p-3 flex flex-col gap-2 full"
-                            onSubmit={handleSubmit}
-                        >
-                            <div className={`${styles["form-field"]}`}>
-                                <label htmlFor="subject">Subject:</label>
-                                <input
-                                    type="text"
-                                    name="subject"
-                                    id="subject"
-                                    maxLength={30}
-                                    value={formData.subject}
-                                    onChange={handleFormDataChange}
-                                />
-                            </div>
-                            <div className={`${styles["form-field"]} flex-grow`}>
-                                <label htmlFor="description">Description:</label>
-                                <textarea
-                                    className="full text-black"
-                                    name="description"
-                                    id="description"
-                                    value={formData.description}
-                                    onChange={handleFormDataChange}
-                                />
-                            </div>
-                            <div className={`${styles["button-layer"]}`}>
-                                <button type="submit">
-                                    Submit
-                                </button>
-                                <button
-                                    onClick={() => setDialogState(false)}
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
-                    </dialog>
-                </div>
+                        <div className={`${styles["form-field"]}`}>
+                            <label htmlFor="subject">Subject:</label>
+                            <input
+                                type="text"
+                                name="subject"
+                                id="subject"
+                                maxLength={30}
+                                value={formData.subject}
+                                onChange={handleFormDataChange}
+                            />
+                        </div>
+                        <div className={`${styles["form-field"]} flex-grow`}>
+                            <label htmlFor="description">Description:</label>
+                            <textarea
+                                className="full text-black"
+                                name="description"
+                                id="description"
+                                value={formData.description}
+                                onChange={handleFormDataChange}
+                            />
+                        </div>
+                        <div className={`${styles["button-layer"]}`}>
+                            <button type="submit">
+                                Submit
+                            </button>
+                            <button
+                                onClick={() => setDialogState(false)}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </dialog>
             </div>
             {/* this is where the content is displayed */}
             <div className="flex-grow h-72 overflow-y-auto p-3">
@@ -173,10 +168,27 @@ export default function Page() {
                     {userData.complaints.length > 0 &&
                         userData.complaints.map((
                             elem: ComplaintDataUserExtractType,
-                            rowIndex: number
+                            row: number
                         ) => 
-                            <div key={rowIndex}>
+                            <div key={row}>
                                 {/* write here how to display data */}
+                                {Object.entries(elem).map((value, col) => (
+                                    <div
+                                        key={col}
+                                        style={{
+                                            color: value[0] as keyof ComplaintDataUserExtractType === "status"?
+                                                StatusColor[value[1] as StatusKeyType] : "#000",
+                                        }}
+                                    >
+                                        {
+                                            value[0] as keyof ComplaintDataUserExtractType === "_id"?
+                                                row + 1 :
+                                                value[0] as keyof ComplaintDataUserExtractType === "createdAt"?
+                                                    formatDate(value[1] as Date) :
+                                                    capitalize(value[1].toString())
+                                        }
+                                    </div>
+                                ))}
                             </div>
                         )
                     }
