@@ -10,7 +10,8 @@ export default async function middleware(req: NextRequest) {
     const token: JWT & SessionUserFields | null = await getToken({ req, secret }) as JWT & SessionUserFields | null;
     const requestedPath: string = req.nextUrl.pathname;
     
-    if (token === null || token.uniqueId === undefined) {
+    if (token === null) {
+        console.log(token);
         return NextResponse.redirect(new URL("/", req.url));
     }
     if (requestedPath.match(basePathRegex)) {
