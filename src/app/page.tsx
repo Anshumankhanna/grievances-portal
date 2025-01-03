@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { UserDataLoginDefault, UserDataLoginType } from "@/types/userTypes";
 
-export default function LoginPage() {
+export default function Page() {
     const [formData, setFormData] = useState<UserDataLoginType>(UserDataLoginDefault);
     const router = useRouter();
 

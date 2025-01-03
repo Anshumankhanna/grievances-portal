@@ -57,20 +57,12 @@ textarea {
 
 .menu-div {
     @apply bg-tertiary-color
-    flex
-    flex-col
-    justify-start
-    items-center
-    gap-3
-    w-44
-    py-3
-    text-xl
-    text-white
-    font-bold;
+    flex flex-col justify-start items-center gap-3 flex-shrink-0
+    w-44 py-3
+    text-xl text-white font-bold;
 
     & > * {
-        @apply w-full
-        p-3
+        @apply w-full p-3
         cursor-pointer;
 
         &:hover {

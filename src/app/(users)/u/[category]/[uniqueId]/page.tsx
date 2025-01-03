@@ -68,7 +68,6 @@ export default function Page() {
     return (
         <div
             className="flex flex-grow flex-col
-                w-44 h-full
                 text-black
             "
         >
