@@ -4,15 +4,18 @@ import type { NextRequest } from "next/server";
 import { SessionUserFields } from "./types/userTypes";
 import { basePathRegex } from "./utils/regex";
 
-const { AUTH_SECRET: secret } = process.env;
+const { AUTH_SECRET: secret, ADMIN_PATH, DEVADMIN_PATH } = process.env;
 
 export default async function middleware(req: NextRequest) {
-    const token: JWT & SessionUserFields | null = await getToken({ req, secret }) as JWT & SessionUserFields | null;
     const requestedPath: string = req.nextUrl.pathname;
-    
+    const token: JWT & SessionUserFields | null = await getToken({ req, secret }) as JWT & SessionUserFields | null;
+
     if (token === null) {
-        console.log(token);
-        return NextResponse.redirect(new URL("/", req.url));
+        if (requestedPath !== "/") {
+            return NextResponse.redirect(new URL("/", req.url));
+        }
+        
+        return NextResponse.next();
     }
     if (requestedPath.match(basePathRegex)) {
         return NextResponse.redirect(new URL(token.basePath, req.url));
@@ -20,14 +23,26 @@ export default async function middleware(req: NextRequest) {
     if (requestedPath === "/profile") {
         return NextResponse.redirect(new URL(`${token.basePath}/profile`, req.url));
     }
+    if (requestedPath === "/upgrade") {
+        const adminPath = req.nextUrl.searchParams.get("admin-path");
+        const adminKey = req.nextUrl.searchParams.get("admin-key");
+
+        if (adminKey === null|| adminPath === null || (adminPath !== ADMIN_PATH && adminPath !== DEVADMIN_PATH)) {
+            return NextResponse.redirect(new URL(token.basePath, req.url));
+        }
+
+        return NextResponse.redirect(new URL(`/api/make-admin?admin-path=${adminPath}&admin-key=${adminKey}`, req.url));
+    }
 
     return NextResponse.next();
 }
 
 export const config = {
     matcher: [
-        "/:path*",
+        "/",
         "/u/:path*",
-        "/a/:path*",
+        "/a",
+        "/profile",
+        "/upgrade"
     ]
 };

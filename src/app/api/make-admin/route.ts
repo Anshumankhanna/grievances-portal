@@ -12,7 +12,7 @@ const {
     DEVADMIN_PATH
 } = process.env;
 
-export default async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
     if (secret === undefined) {
         return NextResponse.redirect(new URL("/", req.url));
     }
@@ -24,11 +24,11 @@ export default async function POST(req: NextRequest) {
     }
 
     const adminKey = req.nextUrl.searchParams.get("admin-key");
-    const requestedPath = req.nextUrl.searchParams.get("route");
+    const adminPath = req.nextUrl.searchParams.get("admin-path");
 
     if (
         adminKey === null ||
-        requestedPath === null ||
+        adminPath === null ||
         MAKE_ADMIN_KEY === undefined ||
         ADMIN_PATH === undefined ||
         DEVADMIN_PATH === undefined
@@ -47,9 +47,11 @@ export default async function POST(req: NextRequest) {
                 return NextResponse.redirect(new URL(token.basePath, req.url));
             }
 
-            user.role = requestedPath === ADMIN_PATH? "admin" : requestedPath === DEVADMIN_PATH? "devadmin" : "user";
+            user.role = adminPath === ADMIN_PATH? "admin" : adminPath === DEVADMIN_PATH? "devadmin" : "user";
 
             await user.save();
+
+            console.log("user is now admin");
         } catch (error) {
             console.error(error);
         }

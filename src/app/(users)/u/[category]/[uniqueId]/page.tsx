@@ -59,7 +59,7 @@ export default function Page() {
         const { error, result } = await addComplaint(formData); //eslint-disable-line
 
         if (error !== null) {
-            console.log(error);
+            console.error(error);
         } else {
             setDialogState(false);
         }

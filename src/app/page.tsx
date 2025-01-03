@@ -35,7 +35,7 @@ export default function Page() {
         });
         
         if (result === undefined) {
-            console.log("Sign In failed");
+            console.error("Sign In failed");
         } else if (result.error) {
             console.error(result.error);
         } else if (result.ok) {

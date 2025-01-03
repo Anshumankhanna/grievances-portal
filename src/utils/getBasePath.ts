@@ -31,7 +31,6 @@ export default async function getBasePath(uniqueId?: string): Promise<OutputType
         console.error(error);
         output.error = "An error occured";
     } else {
-        console.log(`Get user details result = ${result}`);
         output.result = makePath(Roles[result.role], Categories[result.category], uniqueId);
     }
 

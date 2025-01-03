@@ -39,7 +39,6 @@ export default function Page() {
                 setError("");
             }, 5000);
         } else {
-            console.log(result.result);
             router.push("/");
         }
     }
