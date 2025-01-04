@@ -1,7 +1,8 @@
 import { connectDB } from "@/lib/mongodb";
-import { UserDocument } from "@/models";
 import User from "@/models/User";
+import { RoleKeyType } from "@/types/roleTypes";
 import { SessionUserFields } from "@/types/userTypes";
+import getBasePath from "@/utils/getBasePath";
 import { getToken, JWT } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -38,20 +39,21 @@ export async function GET(req: NextRequest) {
     
     if (adminKey === MAKE_ADMIN_KEY) {
         try {
-            await connectDB();
+            const updatedRole: RoleKeyType = adminPath === ADMIN_PATH? "admin" : adminPath === DEVADMIN_PATH? "devadmin" : "user";
 
-            const user: UserDocument | null = await User.findOne({ uniqueId: token.uniqueId }).select("role");
+            await connectDB();
+            await User.updateOne(
+                { uniqueId: token.uniqueId },
+                { $set: { role: updatedRole }}
+            );
             
-            if (user === null) {
-                console.error("User not found");
+            const { error, result } = await getBasePath(token.uniqueId);
+
+            if (error !== null) {
                 return NextResponse.redirect(new URL(token.basePath, req.url));
             }
-
-            user.role = adminPath === ADMIN_PATH? "admin" : adminPath === DEVADMIN_PATH? "devadmin" : "user";
-
-            await user.save();
-
-            console.log("user is now admin");
+            
+            token.basePath = result;
         } catch (error) {
             console.error(error);
         }

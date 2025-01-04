@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { UserDataLoginDefault, UserDataLoginType } from "@/types/userTypes";
 
 export default function Page() {
-    const [formData, setFormData] = useState<UserDataLoginType>(UserDataLoginDefault);
+    const [formData, setFormData] = useState<Partial<UserDataLoginType>>(UserDataLoginDefault);
     const router = useRouter();
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {

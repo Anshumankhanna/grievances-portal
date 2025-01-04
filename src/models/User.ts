@@ -2,7 +2,7 @@ import { RoleKeys, RoleKeyType } from "@/types/roleTypes";
 import { CategoryKeys, CategoryKeyType } from "@/types/categoryTypes";
 import mongoose, { Schema, model, Document, ObjectId } from "mongoose";
 
-export type UserDocument = Document & {
+export type UserType = {
     // this is necessary
     _id: ObjectId;
     role: RoleKeyType;
@@ -16,8 +16,9 @@ export type UserDocument = Document & {
     createdAt: Date;
     updatedAt: Date;
 }
+export type UserDocument = Document & UserType
 
-const UserSchema = new Schema<UserDocument>(
+const UserSchema = new Schema<UserType>(
     {
         role: {
             type: String,
@@ -79,6 +80,6 @@ const UserSchema = new Schema<UserDocument>(
     }
 );
 
-const User = mongoose.models?.User || model<UserDocument>("User", UserSchema);
+const User = mongoose.models?.User || model<UserType>("User", UserSchema);
 
 export default User;

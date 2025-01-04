@@ -1,7 +1,7 @@
 import { StatusKeys, StatusKeyType } from "@/types/complaintTypes";
 import mongoose, { model, ObjectId, Schema } from "mongoose";
 
-export type ComplaintDocument = {
+export type ComplaintType = {
     // this is for mongodb.
     _id: ObjectId;
     user: ObjectId;
@@ -11,8 +11,9 @@ export type ComplaintDocument = {
     createdAt: Date;
     updatedAt: Date;
 }
+export type ComplaintDocument = Document & ComplaintType;
 
-const ComplaintSchema = new Schema<ComplaintDocument>(
+const ComplaintSchema = new Schema<ComplaintType>(
     {
         user: {
             type: Schema.Types.ObjectId,
@@ -38,6 +39,6 @@ const ComplaintSchema = new Schema<ComplaintDocument>(
     }
 );
 
-const Complaint = mongoose.models?.Complaint || model<ComplaintDocument>("Complaint", ComplaintSchema);
+const Complaint = mongoose.models?.Complaint || model<ComplaintType>("Complaint", ComplaintSchema);
 
 export default Complaint;

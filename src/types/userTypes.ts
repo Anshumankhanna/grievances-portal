@@ -1,15 +1,11 @@
-import { UserDocument } from "@/models/User";
+import { UserType } from "@/models/User";
 import { ComplaintDataUserExtractType } from "./complaintTypes";
 
 
-export type SessionUserFields = Pick<UserDocument, "_id" | "uniqueId"> & {
+export type SessionUserFields = Pick<UserType, "_id" | "uniqueId"> & {
     basePath: string;
 };
-export type TokenUserFields = Omit<UserDocument, "password">;
-export type UserDataUserExtractType = Omit<UserDocument, "password" | "complaints"> & {
-    complaints: ComplaintDataUserExtractType[];
-}
-export type UserDataAdminExtractType = Pick<UserDocument, "_id" | "uniqueId" | "name" | "email" | "mobile">;
+export type TokenUserFields = Omit<UserType, "password">;
 
 export type UserDataLoginType = {
     uniqueId: string;
@@ -37,19 +33,9 @@ export const UserDataFillDefault: UserDataFillType = {
     password: "",
 };
 
-export type UserDataDashboardType = Pick<UserDataUserExtractType, "uniqueId" | "name" | "complaints">;
-export const UserDataDashboardDefault: UserDataDashboardType = {
-    uniqueId: "",
-    name: "",
-    complaints: [],
-};
-
-export type UserDataProfileType = Pick<UserDataUserExtractType, "uniqueId" | "name" | "email" | "mobile" | "createdAt">;
-export const UserDataProfileDefault: UserDataProfileType = {
-    uniqueId: "",
-    name: "",
-    email: "",
-    mobile: 0,
-    createdAt: {} as Date,
+export type UserDataUserExtractType = Omit<UserType, "password" | "complaints"> & {
+    complaints: ComplaintDataUserExtractType[];
 }
-
+export type UserDataDashboardType = Pick<UserDataUserExtractType, "_id" | "uniqueId" | "name" | "complaints">;
+export type UserDataAdminDashboardType = Omit<UserDataDashboardType, "complaints">;
+export type UserDataProfileType = Pick<UserDataUserExtractType, "_id" | "uniqueId" | "name" | "email" | "mobile" | "createdAt">;

@@ -1,4 +1,4 @@
-export default function fixForDate<T extends Record<string, unknown>>(input: T): void {
+export default function fixForDate<T extends Record<string, unknown> | Array<unknown>>(input: T): void {
     for (const key in input) {
         // Skip the property if it's not directly part of the object (e.g., inherited properties)
         if (!Object.prototype.hasOwnProperty.call(input, key)) {

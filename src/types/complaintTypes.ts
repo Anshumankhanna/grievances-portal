@@ -1,5 +1,5 @@
-import { ComplaintDocument } from "@/models/Complaint";
-import { UserDataAdminExtractType } from "./userTypes";
+import { ComplaintType } from "@/models/Complaint";
+import { UserDataProfileType } from "./userTypes";
 
 export const Statuses = {
     unresolved: "unresolved",
@@ -15,9 +15,9 @@ export type StatusValueType = (typeof Statuses)[keyof typeof Statuses];
 export const StatusKeys: StatusKeyType[] = Object.keys(Statuses) as StatusKeyType[];
 export const StatusValues: StatusValueType[] = Object.values(Statuses) as StatusValueType[];
 
-export const ComplaintDetailsArray: (keyof ComplaintDocument)[] = ["subject", "description", "createdAt", "status"];
+export const ComplaintDetailsArray: (keyof ComplaintType)[] = ["subject", "description", "createdAt", "status"];
 export const ComplaintDetailsString = ComplaintDetailsArray.join(" ");
-export type ComplaintDataFillType = Pick<ComplaintDocument, "subject" | "description">;
+export type ComplaintDataFillType = Pick<ComplaintType, "subject" | "description">;
 
 export type ComplaintDataUserExtractType = ComplaintDataFillType & {
     _id: string;
@@ -25,6 +25,7 @@ export type ComplaintDataUserExtractType = ComplaintDataFillType & {
     createdAt: Date;
 }
 
-export type ComplaintDataAdminExtractType = ComplaintDataUserExtractType & {
-    user: UserDataAdminExtractType;
+export type ComplaintDataAdminExtractType = Omit<ComplaintType, "user"> & {
+    user: UserDataProfileType
 }
+export const Keys: (keyof ComplaintDataAdminExtractType)[] = ["user"];

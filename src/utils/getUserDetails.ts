@@ -1,11 +1,12 @@
 "use server";
 
 import { connectDB } from "@/lib/mongodb";
-import User, { UserDocument } from "@/models/User";
+import User, { UserDocument, UserType } from "@/models/User";
 import { ComplaintDetailsString } from "@/types/complaintTypes";
 import { OutputType } from "@/types/outputType";
 import { UserDataUserExtractType } from "@/types/userTypes";
-import fixForDate from "./fixDateType";
+import fixForDate from "./fixForDate";
+import { Query } from "mongoose";
 
 type resultType = Partial<UserDataUserExtractType>;
 
@@ -18,7 +19,8 @@ export default async function getUserDetails(uniqueId: string, ...details: (keyo
     try {
         await connectDB();
 
-        const user: UserDocument | UserDataUserExtractType | null = await User
+        // Query allows the property 'populate'
+        const user: (Query<unknown, unknown> & Partial<UserType | UserDataUserExtractType>) | null = await User
         .findOne({ uniqueId })
         .select(details.join(" "));
         

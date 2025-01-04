@@ -8,10 +8,10 @@ import { ComplaintDataFillType, ComplaintDataUserExtractType, StatusColor, Statu
 import addComplaint from "@/actions/addComplaint";
 import formatDate from "@/utils/formatDate"; //eslint-disable-line
 import capitalize from "@/utils/capitalize";
-import { UserDataDashboardDefault, UserDataDashboardType } from "@/types/userTypes";
+import { UserDataDashboardType } from "@/types/userTypes";
 
 export default function Page() {
-    const [userData, setUserData] = useState<UserDataDashboardType>(UserDataDashboardDefault);
+    const [userData, setUserData] = useState<UserDataDashboardType | null>(null);
     const [formData, setFormData] = useState<ComplaintDataFillType>({
         subject: "",
         description: "",
@@ -26,14 +26,15 @@ export default function Page() {
                 return ;
             }
             
-            const { error, result } = await getUserDetails(session.user.uniqueId, "uniqueId", "name", "complaints");
+            const { error, result } = await getUserDetails(session.user.uniqueId, "_id", "uniqueId", "name", "complaints");
 
-            if (error !== null || result.uniqueId === undefined || result.name === undefined || result.complaints === undefined) {
-                console.error(error);
+            if (error !== null || result._id === undefined || result.uniqueId === undefined || result.name === undefined || result.complaints === undefined) {
+                console.error(error ?? "Something went wrong");
                 return ;
             }
 
             setUserData({
+                _id: result._id,
                 uniqueId: result.uniqueId,
                 name: result.name,
                 complaints: result.complaints,
@@ -75,10 +76,10 @@ export default function Page() {
             <div className="h-24 flex justify-between items-center px-10 py-5">
                 <div className="flex flex-col justify-between h-full text-xl">
                     <div>
-                        <span className="font-bold">Name:</span> {userData.name}
+                        <span className="font-bold">Name:</span> {userData?.name ?? "Name"}
                     </div>
                     <div>
-                        <span className="font-bold">ID:</span> <span className="text-blue-400">{userData.uniqueId}</span>
+                        <span className="font-bold">ID:</span> <span className="text-blue-400">{userData?.uniqueId ?? "00000000000"}</span>
                     </div>
                 </div>
                 <button
@@ -164,7 +165,7 @@ export default function Page() {
                             Created
                         </div>
                     </div>
-                    {userData.complaints.length > 0 &&
+                    {userData !== null && userData.complaints.length > 0 &&
                         userData.complaints.map((
                             elem: ComplaintDataUserExtractType,
                             row: number
