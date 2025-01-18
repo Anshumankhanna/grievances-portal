@@ -1,12 +1,12 @@
 "use server";
 
-import { UserData } from "@/app/signup/page";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import { OutputType } from "@/types/outputType";
+import { UserDataFillType } from "@/types/userTypes";
 import bcrypt from "bcryptjs";
 
-export const signup = async (userdata: UserData): Promise<OutputType<string>> => {
+export const signup = async (userdata: UserDataFillType): Promise<OutputType<string>> => {
     const { uniqueId, password } = userdata;
     const output: OutputType<string> = {
         error: null,
