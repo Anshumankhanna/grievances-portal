@@ -10,12 +10,14 @@ import formatDate from "@/utils/formatDate"; //eslint-disable-line
 import capitalize from "@/utils/capitalize";
 import { UserDataDashboardType } from "@/types/userTypes";
 
+const BLANK_FORM: ComplaintDataFillType = {
+	subject: "",
+	description: "",
+};
+
 export default function Page() {
     const [userData, setUserData] = useState<UserDataDashboardType | null>(null);
-    const [formData, setFormData] = useState<ComplaintDataFillType>({
-        subject: "",
-        description: "",
-    });
+    const [formData, setFormData] = useState<ComplaintDataFillType>(BLANK_FORM);
     const [dialogState, setDialogState] = useState(false);
 
     useEffect(() => {
@@ -63,6 +65,7 @@ export default function Page() {
             console.error(error);
         } else {
             setDialogState(false);
+			setFormData(BLANK_FORM);
         }
     };
 
@@ -128,6 +131,7 @@ export default function Page() {
                                 Submit
                             </button>
                             <button
+								type="button"
                                 onClick={() => setDialogState(false)}
                             >
                                 Cancel
@@ -136,15 +140,7 @@ export default function Page() {
                     </form>
                 </dialog>
             </div>
-            {/* this is where the content is displayed */}
             <div className="flex-grow h-72 overflow-y-auto p-3">
-                {/* add all data here in a well displayed manner */}
-                {/* {userData.complaints.length > 0 &&
-                    userData.complaints.map(elem => ( //eslint-disable-line
-                        <div key={1}>{elem.subject}</div>
-                    ))
-                } */}
-
                 <div
                     className={`${styles["table-grid"]}`}
                 >

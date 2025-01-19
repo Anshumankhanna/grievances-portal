@@ -1,26 +1,14 @@
-"use client";
-
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function UserMenu() {
-    const router = useRouter();
-
     return (
         <div className="menu-div">
-            <div
-                onClick={() => {
-                    router.push("/");
-                }}
-            >
+            <Link href={"/"}>
                 Dashboard
-            </div>
-            <div
-                onClick={() => {
-                    router.push("/profile")
-                }}
-            >
+            </Link>
+            <Link href={"/profile"}>
                 Profile
-            </div>
+            </Link>
         </div>
     )
 }
