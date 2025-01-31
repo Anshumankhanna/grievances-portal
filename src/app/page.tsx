@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./page.module.css";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -44,8 +43,8 @@ export default function Page() {
     };
     return (
         <div className="flex justify-center items-center rounded-lg">
-            <form className={`bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3 ${styles.form}`} onSubmit={handleSubmit}>
-                <h1 className="text-3xl text-black text-center text-tertiary-color font-bold">Login</h1>
+            <form className={`bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3 form`} onSubmit={handleSubmit}>
+                <h1 className="text-3xl text-black text-center text-tertiary-color font-bold">Create admin</h1>
                 <div>
                     <label className="text-black">Unique ID</label>
                     <input

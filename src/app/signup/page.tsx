@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./page.module.css";
 import Link from "next/link";
 import { signup } from "@/actions/signup";
 import { useRouter } from "next/navigation";
@@ -47,7 +46,7 @@ export default function Page() {
         <>
             <div className="flex justify-center items-center rounded-lg">
                 <form 
-                    className={`bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3 overflow-y-auto ${styles.form}`}
+                    className={`bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3 overflow-y-auto form`}
                     onSubmit={handleSubmit}
                 >
                     {error === "" &&
@@ -67,7 +66,6 @@ export default function Page() {
                             required
                         >
                             <option value="select" disabled>Select</option>
-                            <option value="parent">Parent</option>
                             <option value="student">Student</option>
                             <option value="teacher">Teacher</option>
                         </select>

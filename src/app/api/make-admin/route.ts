@@ -6,6 +6,8 @@ import getBasePath from "@/utils/getBasePath";
 import { getToken, JWT } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
+// have to make changes to this file
+
 const {
     AUTH_SECRET: secret,
     MAKE_ADMIN_KEY,
