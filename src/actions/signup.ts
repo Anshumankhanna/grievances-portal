@@ -3,11 +3,10 @@
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import { OutputType } from "@/types/outputType";
-import { RoleKeyType } from "@/types/roleTypes";
 import { UserDataFillType } from "@/types/userTypes";
 import bcrypt from "bcryptjs";
 
-export const signup = async (userdata: UserDataFillType, role: RoleKeyType = "user"): Promise<OutputType<string>> => { //eslint-disable-line
+export const signup = async (userdata: UserDataFillType): Promise<OutputType<string>> => { //eslint-disable-line
     const { uniqueId, password } = userdata;
     const output: OutputType<string> = {
         error: null,
@@ -17,7 +16,6 @@ export const signup = async (userdata: UserDataFillType, role: RoleKeyType = "us
     try {
         await connectDB();
 
-        // const Model = role === "user"? User : "";        
         const user = await User.findOne({ uniqueId }).select("_id");
 
         if (user !== null) {
