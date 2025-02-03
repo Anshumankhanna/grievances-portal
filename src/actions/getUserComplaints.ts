@@ -17,12 +17,17 @@ export default async function getUserComplaints(uniqueId: string) {
 	try {
 		await connectDB();
 
-		const { complaints } = await User.findOne({ uniqueId }).select("complaints -_id").populate({
+		const user = await User.findOne({ uniqueId }).select("complaints -_id").populate({
 			path: "complaints",
 			select: "subject description status createdAt -_id"
 		});
 
-		for (const complaint of complaints) {
+		if (!user) {
+			output.error = "Something went wrong";
+			return output;
+		}
+
+		for (const complaint of user.complaints) {
 			output.result.push({
 				subject: complaint.subject,
 				description: complaint.description,
