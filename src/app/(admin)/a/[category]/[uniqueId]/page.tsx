@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import { StatusColor } from "@/types/complaintTypes";
 import getComplaints, { ComplaintDataAdminType } from "@/utils/getComplaints";
-import formatDate from "@/utils/formatDate";
 import capitalize from "@/utils/capitalize";
 import getMyDetails from "@/utils/getMyDetails";
 import statusColor from "@/utils/statusColor";
@@ -21,30 +19,26 @@ export default function Page() {
 
     useEffect(() => {
         (async () => {
-            {
-                const { error, result } = await getMyDetails("uniqueId", "name");
+            const details = await getMyDetails("uniqueId", "name");
 
-                if (error || !result.uniqueId || !result.name) {
-                    console.error(error);
-                    return ;
-                }
-                
-                setUserData({
-                    uniqueId: result.uniqueId,
-                    name: result.name
-                })
+            if (details.error || !details.result.uniqueId || !details.result.name) {
+                console.error(details.error);
+                return ;
+            }
+            
+            setUserData({
+                uniqueId: details.result.uniqueId,
+                name: details.result.name
+            });
+
+            const complaints = await getComplaints();
+
+            if (complaints.error) {
+                console.error(complaints.error);
+                return ;
             }
 
-            {
-                const { error, result } = await getComplaints();
-
-                if (error !== null) {
-                    console.error(error);
-                    return ;
-                }
-
-                setComplaintData(result);
-            }
+            setComplaintData(complaints.result);
         })()
     }, []);
 
@@ -65,15 +59,7 @@ export default function Page() {
                     </div>
                 </div>
             </div>
-            {/* this is where the content is displayed */}
             <div className="flex-grow h-72 overflow-y-auto p-3">
-                {/* add all data here in a well displayed manner */}
-                {/* {userData.complaints.length > 0 &&
-                    userData.complaints.map(elem => ( //eslint-disable-line
-                        <div key={1}>{elem.subject}</div>
-                    ))
-                } */}
-
                 <div
                     className={`${styles["table-grid"]}`}
                 >
@@ -100,12 +86,17 @@ export default function Page() {
                     {complaintData.map((complaint, index) => (
                         <div key={index}>
                             <div>{index + 1}</div>
-                            <div className="flex flex-col justify-center items-center">
+                            <div className="grid grid-cols-2 gap-y-2 size-full items-center [&_>_*]:border-b-2 [&_>_*]:border-black [&_>_*]:size-full">
+                                <div>ID:</div>
                                 <div>{complaint.user.uniqueId}</div>
+                                <div>Name:</div>
                                 <div>{complaint.user.name}</div>
                                 {/* Email should be a link */}
-                                <div>{complaint.user.email}</div>
+                                <div>Email:</div>
+                                <div className="text-blue-500 underline"><a href={`mailto:${complaint.user.email}`}>{complaint.user.email}</a></div>
+                                <div>Mobile:</div>
                                 <div>{complaint.user.mobile}</div>
+                                <div>Created:</div>
                                 <div>{complaint.user.createdAt.toLocaleString("en-IN")}</div>
                             </div>
                             <div>{complaint.subject}</div>
