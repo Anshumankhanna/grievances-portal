@@ -1,12 +1,12 @@
-import { RoleKeys, RoleKeyType } from "@/types/roleTypes";
-import { CategoryKeys, CategoryKeyType } from "@/types/categoryTypes";
 import mongoose, { Schema, model, Document, ObjectId } from "mongoose";
+
+const UserCategories = ["student", "teacher"] as const;
+export type UserCategoriesTypes = typeof UserCategories[number];
 
 export type UserType = {
     // this is necessary
     _id: ObjectId;
-    role: RoleKeyType;
-    category: CategoryKeyType;
+    category: UserCategoriesTypes;
     uniqueId: string;
     name: string;
     email: string;
@@ -16,18 +16,15 @@ export type UserType = {
     createdAt: Date;
     updatedAt: Date;
 }
+export type UserKeyType = keyof UserType;
 export type UserDocument = Document & UserType
+export const UserKeys: UserKeyType[] = ["_id", "category", "uniqueId", "name", "email", "mobile", "password", "complaints", "createdAt", "updatedAt"]
 
 const UserSchema = new Schema<UserType>(
     {
-        role: {
-            type: String,
-            enum: RoleKeys,
-            default: "user",
-        },
         category: {
             type: String,
-            enum: CategoryKeys,
+            enum: UserCategories,
             required: true,
         },
         uniqueId: {

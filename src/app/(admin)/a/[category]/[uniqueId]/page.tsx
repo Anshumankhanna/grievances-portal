@@ -1,39 +1,37 @@
 "use client";
 
-import getUserDetails from "@/utils/getUserDetails";
-import { getSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import { ComplaintDataAdminExtractType, StatusColor } from "@/types/complaintTypes";
-import { UserDataAdminDashboardType } from "@/types/userTypes";
-import getComplaints from "@/utils/getComplaints";
+import { StatusColor } from "@/types/complaintTypes";
+import getComplaints, { ComplaintDataAdminType } from "@/utils/getComplaints";
 import formatDate from "@/utils/formatDate";
 import capitalize from "@/utils/capitalize";
+import getMyDetails from "@/utils/getMyDetails";
+import statusColor from "@/utils/statusColor";
 
 export default function Page() {
-    const [userData, setUserData] = useState<UserDataAdminDashboardType | null>(null);
-    const [complaintData, setComplaintData] = useState<ComplaintDataAdminExtractType[]>([]);
+    const [userData, setUserData] = useState<{
+        uniqueId: string;
+        name: string;
+    }>({
+        uniqueId: "",
+        name: ""
+    });
+    const [complaintData, setComplaintData] = useState<ComplaintDataAdminType[]>([]);
 
     useEffect(() => {
-        (async (): Promise<void> => {
-            const session = await getSession();
-
-            if (session === null) {
-                return ;
-            }
-            
+        (async () => {
             {
-                const { error, result } = await getUserDetails(session.user.uniqueId, "_id", "name", "uniqueId");
+                const { error, result } = await getMyDetails("uniqueId", "name");
 
-                if (error !== null || result._id === undefined || result.uniqueId === undefined || result.name === undefined) {
+                if (error || !result.uniqueId || !result.name) {
                     console.error(error);
                     return ;
                 }
                 
                 setUserData({
-                    _id: result._id,
-                    name: result.name,
-                    uniqueId: result.uniqueId
+                    uniqueId: result.uniqueId,
+                    name: result.name
                 })
             }
 
@@ -46,7 +44,6 @@ export default function Page() {
                 }
 
                 setComplaintData(result);
-                console.log(result);
             }
         })()
     }, []);
@@ -61,10 +58,10 @@ export default function Page() {
             <div className="h-24 flex justify-between items-center px-10 py-5">
                 <div className="flex flex-col justify-between h-full text-xl">
                     <div>
-                        <span className="font-bold">Name:</span> {userData?.name ?? "Name"}
+                        <span className="font-bold">Name:</span> {userData.name}
                     </div>
                     <div>
-                        <span className="font-bold">ID:</span> <span className="text-blue-400">{userData?.uniqueId ?? "00000000000"}</span>
+                        <span className="font-bold">ID:</span> <span className="text-blue-400">{userData.uniqueId}</span>
                     </div>
                 </div>
             </div>
@@ -100,26 +97,25 @@ export default function Page() {
                             Created
                         </div>
                     </div>
-                    {complaintData.length > 0 &&
-                        complaintData.map((elem, row) => (
-                            <div key={row}>
-                                {
-                                    <>
-                                        <div>{row + 1}</div>
-                                        <div>{elem.user.name}</div>
-                                        <div>{elem.subject}</div>
-                                        <div>{elem.description}</div>
-                                        <div
-                                            style={{
-                                                color: StatusColor[elem.status],
-                                            }}
-                                        >{capitalize(elem.status)}</div>
-                                        <div>{formatDate(elem.createdAt)}</div>
-                                    </>
-                                }
+                    {complaintData.map((complaint, index) => (
+                        <div key={index}>
+                            <div>{index + 1}</div>
+                            <div className="flex flex-col justify-center items-center">
+                                <div>{complaint.user.uniqueId}</div>
+                                <div>{complaint.user.name}</div>
+                                {/* Email should be a link */}
+                                <div>{complaint.user.email}</div>
+                                <div>{complaint.user.mobile}</div>
+                                <div>{complaint.user.createdAt.toLocaleString("en-IN")}</div>
                             </div>
-                        ))
-                    }
+                            <div>{complaint.subject}</div>
+                            <div>{complaint.description}</div>
+                            <div style={{
+                                color: statusColor(complaint.status)
+                            }}>{capitalize(complaint.status)}</div>
+                            <div>{complaint.createdAt.toLocaleString("en-IN")}</div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

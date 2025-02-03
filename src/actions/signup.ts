@@ -1,13 +1,14 @@
 "use server";
 
 import { connectDB } from "@/lib/mongodb";
-import User from "@/models/User";
+import User, { UserType } from "@/models/User";
 import { OutputType } from "@/types/outputType";
-import { UserDataFillType } from "@/types/userTypes";
 import bcrypt from "bcryptjs";
+import getUserDetails from "@/actions/getUserDetails";
 
-export const signup = async (userdata: UserDataFillType): Promise<OutputType<string>> => { //eslint-disable-line
-    const { uniqueId, password } = userdata;
+export type UserDataFillType = Pick<UserType, "category" | "uniqueId" | "name" | "email" | "mobile" | "password">;
+
+export const signup = async (userdata: UserDataFillType): Promise<OutputType<string>> => {
     const output: OutputType<string> = {
         error: null,
         result: ""
@@ -16,14 +17,14 @@ export const signup = async (userdata: UserDataFillType): Promise<OutputType<str
     try {
         await connectDB();
 
-        const user = await User.findOne({ uniqueId }).select("_id");
+        const user = await getUserDetails(userdata.uniqueId, "include", "name");
 
         if (user !== null) {
             output.error = "User exists";
             return output;
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(userdata.password, 10);
         
         await User.create({
             ...userdata,

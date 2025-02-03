@@ -4,10 +4,13 @@ import { UserType } from "./User";
 const AdminCategories = ["admin", "devadmin"] as const;
 export type AdminCategoriesType = typeof AdminCategories[number];
 
-export type AdminType = Omit<UserType, "role" | "category"> & {
-	category: typeof AdminCategories[number];
+// This must remain like this because our AdminType will also be based on UserType
+export type AdminType = Omit<UserType, "category"> & {
+	category: AdminCategoriesType;
 }
+export type AdminKeyType = keyof AdminType;
 export type AdminDocument = Document & AdminType
+export const AdminKeys: AdminKeyType[] = ["_id", "category", "uniqueId", "name", "email", "mobile", "password", "complaints", "createdAt", "updatedAt"]
 
 const AdminSchema = new Schema<AdminType>(
     {
@@ -25,7 +28,7 @@ const AdminSchema = new Schema<AdminType>(
             //         return enrollmentNumberRegex.test(value.toString());
             //     },
             //     message: "Enrollment number is invalid",
-            // },
+            // }
         },
         name: {
             type: String,
@@ -38,7 +41,7 @@ const AdminSchema = new Schema<AdminType>(
             // match: [
             //     emailRegex,
             //     "Email is invalid",
-            // ],
+            // ]
         },
         mobile: {
             type: Number,

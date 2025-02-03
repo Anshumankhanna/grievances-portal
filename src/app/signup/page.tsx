@@ -2,9 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { signup } from "@/actions/signup";
+import { signup, UserDataFillType } from "@/actions/signup";
 import { useRouter } from "next/navigation";
-import { UserDataFillDefault, UserDataFillType } from "@/types/userTypes";
+
+const UserDataFillDefault: UserDataFillType = {
+    category: "student",
+    uniqueId: "",
+    name: "",
+    email: "",
+    mobile: 0,
+    password: "",
+}
 
 export default function Page() {
     const [formData, setFormData] = useState<UserDataFillType>(UserDataFillDefault);
@@ -29,6 +37,7 @@ export default function Page() {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
+        
         const result = await signup(formData);
 
         if (result.error) {

@@ -1,6 +1,6 @@
 "use server";
 
-import getUserDetails from "@/utils/getUserDetails";
+import getUserDetails from "@/utils/getMyDetails";
 import { Roles } from "@/types/roleTypes";
 import { Categories } from "@/types/categoryTypes";
 import makePath from "./makePath";

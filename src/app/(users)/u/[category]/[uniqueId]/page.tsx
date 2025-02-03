@@ -1,46 +1,51 @@
 "use client";
 
-import getUserDetails from "@/utils/getUserDetails";
-import { getSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import { ComplaintDataFillType, ComplaintDataUserExtractType, StatusColor, StatusKeyType } from "@/types/complaintTypes";
-import addComplaint from "@/actions/addComplaint";
-import formatDate from "@/utils/formatDate"; //eslint-disable-line
+import addComplaint, { ComplaintDataFillType } from "@/actions/addComplaint";
+import getMyDetails from "@/utils/getMyDetails";
+import { ComplaintType } from "@/models";
+import getUserComplaints, { ComplaintDataUserType } from "@/actions/getUserComplaints";
+import statusColor from "@/utils/statusColor";
 import capitalize from "@/utils/capitalize";
-import { UserDataDashboardType } from "@/types/userTypes";
 
-const BLANK_FORM: ComplaintDataFillType = {
+const ComplaintDataFillDefault: ComplaintDataFillType = {
 	subject: "",
 	description: "",
 };
 
 export default function Page() {
-    const [userData, setUserData] = useState<UserDataDashboardType | null>(null);
-    const [formData, setFormData] = useState<ComplaintDataFillType>(BLANK_FORM);
+    const [userData, setUserData] = useState<{
+        uniqueId: string;
+        name: string;
+    }>({
+        uniqueId: "",
+        name: ""
+    });
+    const [complaints, setComplaints] = useState<ComplaintDataUserType[]>([]);
+    const [formData, setFormData] = useState<ComplaintDataFillType>(ComplaintDataFillDefault);
     const [dialogState, setDialogState] = useState(false);
 
     useEffect(() => {
         (async (): Promise<void> => {
-            const session = await getSession();
+            const details = await getMyDetails("uniqueId", "name");
 
-            if (session === null) {
-                return ;
-            }
-            
-            const { error, result } = await getUserDetails(session.user.uniqueId, "_id", "uniqueId", "name", "complaints");
-
-            if (error !== null || result._id === undefined || result.uniqueId === undefined || result.name === undefined || result.complaints === undefined) {
-                console.error(error ?? "Something went wrong");
+            if (details.error || !details.result.uniqueId || !details.result.name) {
                 return ;
             }
 
             setUserData({
-                _id: result._id,
-                uniqueId: result.uniqueId,
-                name: result.name,
-                complaints: result.complaints,
-            })
+                uniqueId: details.result.uniqueId,
+                name: details.result.name
+            });
+
+            const complaintData = await getUserComplaints(details.result.uniqueId);
+
+            if (complaintData.error) {
+                return ;
+            }
+
+            setComplaints(complaintData.result);
         })()
     }, [dialogState]);
 
@@ -65,7 +70,7 @@ export default function Page() {
             console.error(error);
         } else {
             setDialogState(false);
-			setFormData(BLANK_FORM);
+			setFormData(ComplaintDataFillDefault);
         }
     };
 
@@ -161,33 +166,17 @@ export default function Page() {
                             Created
                         </div>
                     </div>
-                    {userData !== null && userData.complaints.length > 0 &&
-                        userData.complaints.map((
-                            elem: ComplaintDataUserExtractType,
-                            row: number
-                        ) => 
-                            <div key={row}>
-                                {/* write here how to display data */}
-                                {Object.entries(elem).map((value, col) => (
-                                    <div
-                                        key={col}
-                                        style={{
-                                            color: value[0] as keyof ComplaintDataUserExtractType === "status"?
-                                                StatusColor[value[1] as StatusKeyType] : "#000",
-                                        }}
-                                    >
-                                        {
-                                            value[0] as keyof ComplaintDataUserExtractType === "_id"?
-                                                row + 1 :
-                                                value[0] as keyof ComplaintDataUserExtractType === "createdAt"?
-                                                    formatDate(value[1] as Date) :
-                                                    capitalize(value[1].toString())
-                                        }
-                                    </div>
-                                ))}
-                            </div>
-                        )
-                    }
+                    {complaints.map((complaint, index) => (
+                        <div key={index}>
+                            <div>{index + 1}</div>
+                            <div>{complaint.subject}</div>
+                            <div>{complaint.description}</div>
+                            <div style={{
+                                color: statusColor(complaint.status)
+                            }}>{capitalize(complaint.status)}</div>
+                            <div>{complaint.createdAt.toLocaleString("en-IN")}</div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

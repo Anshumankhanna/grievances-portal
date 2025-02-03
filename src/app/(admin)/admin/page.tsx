@@ -1,6 +1,7 @@
 "use client";
 
 import makeAdmin from "@/actions/makeAdmin";
+import { signOut } from "next-auth/react";
 import { useState } from "react";
 
 export default function AdminPage() {
@@ -8,7 +9,15 @@ export default function AdminPage() {
 
     const handleSubmit = async (submitEvent: React.FormEvent<HTMLFormElement>) => {
         submitEvent.preventDefault();
-        await makeAdmin(key);
+
+        const { error, result } = await makeAdmin(key);
+
+        if (error) {
+            console.error(error);
+        } else {
+            console.log(result);
+            await signOut({ redirect: true, callbackUrl: "/" });
+        }
     }
 
 	return (

@@ -1,7 +1,6 @@
 import { UserType } from "@/models/User";
 import { ComplaintDataUserExtractType } from "./complaintTypes";
 
-
 export type SessionUserFields = Pick<UserType, "_id" | "uniqueId"> & {
     basePath: string;
 };

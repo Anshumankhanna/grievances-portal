@@ -5,7 +5,15 @@ import { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { UserDataLoginDefault, UserDataLoginType } from "@/types/userTypes";
+
+type UserDataLoginType = {
+    uniqueId: string;
+    password: string;
+};
+const UserDataLoginDefault: UserDataLoginType = {
+    uniqueId: "",
+    password: "",
+};
 
 export default function Page() {
     const [formData, setFormData] = useState<Partial<UserDataLoginType>>(UserDataLoginDefault);

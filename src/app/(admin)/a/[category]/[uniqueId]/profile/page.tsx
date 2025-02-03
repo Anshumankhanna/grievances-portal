@@ -1,36 +1,26 @@
 "use client";
 
-import { UserDataProfileType } from "@/types/userTypes";
-import getUserDetails from "@/utils/getUserDetails";
-import { getSession } from "next-auth/react";
+import { AdminType, UserType } from "@/models";
+import getMyDetails from "@/utils/getMyDetails";
 import { useEffect, useState } from "react"
 
 export default function Profile() {
-    const [profileData, setProfileData] = useState<UserDataProfileType | null>(null);
+    const [profileData, setProfileData] = useState<Pick<UserType | AdminType, "uniqueId" | "name" | "email" | "mobile" | "createdAt"> | null>(null);
 
     useEffect(() => {
         (async () => {
-            const session = await getSession();
-
-            if (session === null) {
-                // console.error("Session not found");
-                return ;
-            }
-
-            const { error, result } = await getUserDetails(session.user.uniqueId, "_id", "name", "email", "mobile", "createdAt");
-
-            if (error !== null || result._id === undefined || result.name === undefined || result.email === undefined || result.mobile === undefined || result.createdAt === undefined) {
-                console.error(error ?? "Something went wrong");
+            const details = await getMyDetails("uniqueId", "name", "email", "mobile", "createdAt");
+            
+            if (details.error) {
                 return ;
             }
 
             setProfileData({
-                _id: result._id,
-                uniqueId: session.user.uniqueId,
-                name: result.name,
-                email: result.email,
-                mobile: result.mobile,
-                createdAt: result.createdAt,
+                uniqueId: details.result.uniqueId ?? "",
+                name: details.result.name ?? "",
+                email: details.result.email ?? "",
+                mobile: details.result.mobile ?? 0,
+                createdAt: details.result.createdAt ?? new Date(),
             });
         })()
     }, []);

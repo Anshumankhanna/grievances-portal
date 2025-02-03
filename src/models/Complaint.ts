@@ -1,17 +1,20 @@
-import { StatusKeys, StatusKeyType } from "@/types/complaintTypes";
 import mongoose, { model, ObjectId, Schema } from "mongoose";
 
+export const StatusValues = ["unresolved", "resolved"] as const;
+export type StatusType = typeof StatusValues[number];
 export type ComplaintType = {
     // this is for mongodb.
     _id: ObjectId;
     user: ObjectId;
     subject: string;
     description: string;
-    status: StatusKeyType;
+    status: StatusType;
     createdAt: Date;
     updatedAt: Date;
 }
+export type ComplaintKeyType = keyof ComplaintType;
 export type ComplaintDocument = Document & ComplaintType;
+export const ComplaintKeys: ComplaintKeyType[] = ["_id", "user", "subject", "description", "status", "createdAt", "updatedAt"]
 
 const ComplaintSchema = new Schema<ComplaintType>(
     {
@@ -30,7 +33,7 @@ const ComplaintSchema = new Schema<ComplaintType>(
         },
         status: {
             type: String,
-            enum: StatusKeys,
+            enum: StatusValues,
             default: "unresolved"
         }
     },

@@ -2,11 +2,12 @@
 
 import { authOptions } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
-import Complaint from "@/models/Complaint";
+import Complaint, { ComplaintType } from "@/models/Complaint";
 import User from "@/models/User";
-import { ComplaintDataFillType } from "@/types/complaintTypes";
 import { OutputType } from "@/types/outputType";
 import { getServerSession } from "next-auth";
+
+export type ComplaintDataFillType = Pick<ComplaintType, "subject" | "description">;
 
 export default async function addComplaint(complaintData: ComplaintDataFillType): Promise<OutputType<string>> {
     const output: OutputType<string> = {
@@ -25,7 +26,7 @@ export default async function addComplaint(complaintData: ComplaintDataFillType)
     try {
         await connectDB();
         
-        const user = await User.findOne({ uniqueId: session.user.uniqueId });
+        const user = await User.findOne({ uniqueId: session.user.uniqueId }).select("_id complaints");
         
         if (user === null) {
             output.error = "User not found";
@@ -33,7 +34,7 @@ export default async function addComplaint(complaintData: ComplaintDataFillType)
         }
 
         const complaint = new Complaint({
-            user: session.user._id,
+            user: user._id,
             ...complaintData
         });
 
