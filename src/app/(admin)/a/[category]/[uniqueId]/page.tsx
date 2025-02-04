@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import getComplaints, { ComplaintDataAdminType } from "@/utils/getComplaints";
 import capitalize from "@/utils/capitalize";
 import getMyDetails from "@/utils/getMyDetails";
 import statusColor from "@/utils/statusColor";
 import changeComplaintStatus from "@/actions/changeComplaintStatus";
+
+type FilterType = "status" | "uniqueId" | "name" | "email" | "mobile" | "selected";
 
 export default function Page() {
     const [userData, setUserData] = useState<{
@@ -17,7 +19,10 @@ export default function Page() {
         name: ""
     });
     const [complaintData, setComplaintData] = useState<ComplaintDataAdminType[]>([]);
+    const [displayComplaintData, setDisplayComplaintData] = useState<ComplaintDataAdminType[]>([]);
     const [statusUpdated, setStatusUpdated] = useState(false);
+    const [filter, setFilter] = useState<FilterType>("selected");
+    const [filterValue, setFilterValue] = useState<string>("");
 
     useEffect(() => {
         (async () => {
@@ -41,8 +46,21 @@ export default function Page() {
             }
 
             setComplaintData(complaints.result);
+            setDisplayComplaintData(complaints.result);
         })()
     }, [statusUpdated]);
+
+    const filterData = () => {
+        if (filter === "selected") {
+            return ;
+        }
+        if (filter === "status") {
+            setDisplayComplaintData(complaintData.filter((elem) => elem.status === filterValue));
+            return ;
+        }
+
+        setDisplayComplaintData(complaintData.filter((elem) => elem.user[filter] === filterValue));
+    };
 
     return (
         <div
@@ -59,6 +77,28 @@ export default function Page() {
                     <div>
                         <span className="font-bold">ID:</span> <span className="text-blue-400">{userData.uniqueId}</span>
                     </div>
+                </div>
+                <div className="rounded-lg grid grid-cols-[1fr_2fr_1fr] gap-x-3">
+                    <select value={filter} name="filter" id="filter" onChange={(event: React.ChangeEvent<HTMLSelectElement>) => setFilter(event.target.value as FilterType)}>
+                        <option value="selected" disabled={filter !== "selected"}>Selected</option>
+                        <option value="status">Status</option>
+                        <option value="uniqueId">ID</option>
+                        <option value="name">Name</option>
+                        <option value="email">Email</option>
+                        <option value="mobile">Mobile</option>
+                    </select>
+                    <input
+                        type="text"
+                        value={filterValue}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            if (event.target.value === "") {
+                                setDisplayComplaintData(complaintData);
+                            }
+
+                            setFilterValue(event.target.value);
+                        }}
+                    />
+                    <button className="text-white bg-tertiary-color p-2 rounded-lg font-bold hover:underline" type="button" onClick={filterData}>Filter</button>
                 </div>
             </div>
             <div className="flex-grow h-72 overflow-y-auto p-3">
@@ -85,7 +125,7 @@ export default function Page() {
                             Created
                         </div>
                     </div>
-                    {complaintData.map((complaint, index) => (
+                    {displayComplaintData.map((complaint, index) => (
                         <div key={index}>
                             <div>{index + 1}</div>
                             <div className="grid grid-cols-2 gap-y-2 size-full items-center [&_>_*]:border-b-2 [&_>_*]:border-black [&_>_*]:size-full">

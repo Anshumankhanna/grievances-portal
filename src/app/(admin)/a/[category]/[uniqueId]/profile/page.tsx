@@ -179,7 +179,7 @@ export default function Profile() {
             className="flex flex-col size-full p-5 justify-between gap-7 relative"
         >
             <h1 className="text-4xl underline text-center font-mono font-bold text-primary-color">Profile</h1>
-            <div className="flex-grow flex gap-2">
+            <div className="flex-grow flex gap-2 flex-wrap">
                 {Array.from({ length: unresolved }, (_, index) => (
                     <div className="bg-red-500 size-11 rounded-full" key={index}></div>
                 ))}

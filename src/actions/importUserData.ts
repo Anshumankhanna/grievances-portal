@@ -97,6 +97,6 @@ export default async function importUserData(model: "user" | "complaint", data: 
 		output.error = "Couldn't import data";
 		console.error(error);
 	}
-	console.log("Just before the output");
+	
 	return output;
 };
