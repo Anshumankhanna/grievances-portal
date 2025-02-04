@@ -9,10 +9,10 @@ import bcrypt from "bcryptjs";
 import Complaint from "@/models/Complaint";
 import getUserDetails from "./getUserDetails";
 
-const UserRequiredKeys = ["category", "uniqueId", "name", "email", "mobile", "password"] as const;
-const ComplaintRequiredKeys = ["user", "subject", "description"] as const;
+// const UserRequiredKeys = ["category", "uniqueId", "name", "email", "mobile", "password"] as const;
+// const ComplaintRequiredKeys = ["user", "subject", "description"] as const;
 
-export default async function importUserData(model: "user" | "complaint", data: Record<string, any>): Promise<OutputType<boolean>> {
+export default async function importUserData(model: "user" | "complaint", data: Record<string, any>): Promise<OutputType<boolean>> { // eslint-disable-line
 	const output: OutputType<boolean> = {
 		error: null,
 		result: false
@@ -22,7 +22,7 @@ export default async function importUserData(model: "user" | "complaint", data: 
 		await connectDB();
 		
 		if (model === "user") {
-			await (new Promise(async (res, rej) => {
+			await (new Promise(async (res) => {
 				await Promise.all(
 					Object.values(data).map(async (row: Partial<UserDataFillType>) => {
 						output.result = false;
@@ -32,7 +32,6 @@ export default async function importUserData(model: "user" | "complaint", data: 
 
 							if (user.result.length > 0) {
 								output.error = `User already exists with ${row.uniqueId}`;
-								rej(output.error);
 								return ;
 							}
 
@@ -57,7 +56,7 @@ export default async function importUserData(model: "user" | "complaint", data: 
 				}
 			}));
 		} else {
-			await (new Promise(async (res, rej) => {
+			await (new Promise(async (res) => {
 				await Promise.all(
 					Object.values(data).map(async (row: Partial<ComplaintDataFillType & { uniqueId: string; }>) => {
 						output.result = false;
@@ -67,7 +66,6 @@ export default async function importUserData(model: "user" | "complaint", data: 
 							
 							if (!user) {
 								output.error = `User not found for ${row.uniqueId}`;
-								rej(output.error);
 								return ;
 							}
 		

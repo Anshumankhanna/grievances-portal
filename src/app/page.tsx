@@ -17,6 +17,8 @@ const UserDataLoginDefault: UserDataLoginType = {
 
 export default function Page() {
     const [formData, setFormData] = useState<Partial<UserDataLoginType>>(UserDataLoginDefault);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isValid, setIsValid] = useState(true);
     const router = useRouter();
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
@@ -34,17 +36,24 @@ export default function Page() {
     }
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault(); // Prevent default form submission
-        
+        setIsLoading(true);
+
         const result = await signIn("credentials", {
             uniqueId: formData.uniqueId,
             password: formData.password,
             redirect: false,
         });
+
+        setIsLoading(false);
         
-        if (result === undefined) {
-            console.error("Sign In failed");
-        } else if (result.error) {
-            console.error(result.error);
+        if (result === undefined || result.error) {
+            // console.error(!result? "Sign In failed" : result.error);
+
+            setIsValid(false);
+
+            setTimeout(() => {
+                setIsValid(true);
+            }, 2000);
         } else if (result.ok) {
             router.push("/u");
         }
@@ -77,12 +86,16 @@ export default function Page() {
                         required
                     />
                 </div>
-                <button
-                    type="submit"
-                    className="bg-tertiary-color text-white p-2 rounded-lg font-bold"
-                >
-                    Login
-                </button>
+                {isValid?
+                    <button
+                        type="submit"
+                        className={`${isLoading? "bg-gray-400" : "bg-tertiary-color"} text-white p-2 rounded-lg font-bold`}
+                    >
+                        Login
+                    </button>
+                    :
+                    <span className="text-white bg-red-500 p-2 rounded-lg font-bold w-full text-center">Invalid!! Try Again!!</span>
+                }
                 <div>
                     <span className="mt-4 text-center font-bold">
                         <Link className="text-tertiary-color" href="/forgotPassword">Forgot Password</Link>

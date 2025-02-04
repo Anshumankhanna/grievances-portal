@@ -13,7 +13,7 @@ const InputSelectDefault = {
 };
 
 export default function Import() {
-	const [data, setData] = useState<Record<string, unknown>>({});
+	const [data, setData] = useState<Record<string, unknown>>({}); // eslint-disable-line
 	const [inputSelect, setInputSelect] = useState<InputSelectType>(InputSelectDefault);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [isFileUploaded, setIsFileUploaded] = useState(false);

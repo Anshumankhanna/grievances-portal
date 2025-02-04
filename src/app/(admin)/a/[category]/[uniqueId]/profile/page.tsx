@@ -4,7 +4,7 @@
 "use client";
 
 import changePassword from "@/actions/changePassword";
-import getUserComplaints, { ComplaintDataUserType } from "@/actions/getUserComplaints";
+import { ComplaintDataUserType } from "@/actions/getUserComplaints";
 import verifyDetails from "@/actions/verifyDetails";
 import { AdminType, UserType } from "@/models";
 import getComplaints from "@/utils/getComplaints";
