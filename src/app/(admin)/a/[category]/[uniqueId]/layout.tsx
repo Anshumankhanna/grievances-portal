@@ -1,4 +1,4 @@
-import UserMenu from "@/components/UserMenu/UserMenu";
+import AdminMenu from "@/components/AdminMenu/AdminMenu";
 import { ChildrenType } from "@/types/childrenType";
 
 export default function UserLayout({
@@ -7,7 +7,7 @@ export default function UserLayout({
 ) {
     return (
         <div className="h-full flex items-center justify-start rounded-lg bg-panel-background overflow-hidden [&_>_*]:h-full">
-            <UserMenu />
+            <AdminMenu />
             {children}
         </div>
     )

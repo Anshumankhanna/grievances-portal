@@ -33,6 +33,13 @@ export default async function middleware(req: NextRequest) {
 
         return NextResponse.redirect(new URL(`/api/make-admin?admin-path=${adminPath}&admin-key=${adminKey}`, req.url));
     }
+    if (requestedPath === "/import" || requestedPath === "/export" || requestedPath === "/changeUserPassword") {
+        if (token.category !== "admin" && token.category !== "devadmin") {
+            return NextResponse.redirect(new URL(`${token.basePath}/`, req.url));
+        }
+
+        return NextResponse.redirect(new URL(`${token.basePath}${requestedPath}`, req.url));
+    }
 
     return NextResponse.next();
 }
@@ -43,6 +50,9 @@ export const config = {
         "/u/:path*",
         "/a",
         "/profile",
-        "/upgrade"
+        "/upgrade",
+        "/import",
+        "/export",
+        "/changeUserPassword"
     ]
 };
