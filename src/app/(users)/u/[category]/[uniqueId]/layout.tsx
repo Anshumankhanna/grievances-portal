@@ -1,7 +1,7 @@
 import UserMenu from "@/components/UserMenu/UserMenu";
 import { ChildrenType } from "@/types/childrenType";
 
-export default async function UserLayout({
+export default function UserLayout({
     children
 }: ChildrenType
 ) {

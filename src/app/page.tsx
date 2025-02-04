@@ -52,7 +52,7 @@ export default function Page() {
     return (
         <div className="flex justify-center items-center rounded-lg">
             <form className={`bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3 form`} onSubmit={handleSubmit}>
-                <h1 className="text-3xl text-black text-center text-tertiary-color font-bold">Create admin</h1>
+                <h1 className="text-3xl text-black text-center text-tertiary-color font-bold">Login</h1>
                 <div>
                     <label className="text-black">Unique ID</label>
                     <input
@@ -83,9 +83,14 @@ export default function Page() {
                 >
                     Login
                 </button>
-                <span className="mt-4 text-center font-bold">
-                    Don&apos;t have account? <Link className="text-tertiary-color" href="/signup">Signup</Link> 
-                </span>
+                <div>
+                    <span className="mt-4 text-center font-bold">
+                        <Link className="text-tertiary-color" href="/forgotPassword">Forgot Password</Link>
+                    </span>
+                    <span className="mt-4 text-center font-bold">
+                        <Link className="text-tertiary-color" href="/signup">Signup</Link>
+                    </span>
+                </div>
             </form>
         </div>
     );

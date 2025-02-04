@@ -1,7 +1,7 @@
 import mongoose, { Schema, model, Document } from "mongoose";
 import { UserType } from "./User";
 
-const AdminCategories = ["admin", "devadmin"] as const;
+export const AdminCategories = ["admin", "devadmin"] as const;
 export type AdminCategoriesType = typeof AdminCategories[number];
 
 // This must remain like this because our AdminType will also be based on UserType
