@@ -7,6 +7,7 @@ import changePassword from "@/actions/changePassword";
 import getUserComplaints, { ComplaintDataUserType } from "@/actions/getUserComplaints";
 import verifyDetails from "@/actions/verifyDetails";
 import { AdminType, UserType } from "@/models";
+import getComplaints from "@/utils/getComplaints";
 import getMyDetails from "@/utils/getMyDetails";
 import Image from "next/image";
 import React, { useEffect, useState } from "react"
@@ -87,7 +88,7 @@ export default function Profile() {
                 createdAt: details.result.createdAt
             });
 
-            const complaints = await getUserComplaints(details.result.uniqueId ?? "");
+            const complaints = await getComplaints();
 
             if (complaints.error) {
                 return ;
