@@ -60,6 +60,7 @@ export default async function changePassword(uniqueId?: string, password?: strin
 			await User.updateOne({ uniqueId }, { $set: { password: hashedPassword } });
 		}
 	} catch (error) {
+		output.error = "Couldn't change the password";
 		console.error(error);
 	}
 	

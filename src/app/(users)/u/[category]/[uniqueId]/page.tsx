@@ -8,6 +8,7 @@ import { ComplaintType } from "@/models";
 import getUserComplaints, { ComplaintDataUserType } from "@/actions/getUserComplaints";
 import statusColor from "@/utils/statusColor";
 import capitalize from "@/utils/capitalize";
+import changeComplaintStatus from "@/actions/changeComplaintStatus";
 
 const ComplaintDataFillDefault: ComplaintDataFillType = {
 	subject: "",
@@ -25,6 +26,7 @@ export default function Page() {
     const [complaints, setComplaints] = useState<ComplaintDataUserType[]>([]);
     const [formData, setFormData] = useState<ComplaintDataFillType>(ComplaintDataFillDefault);
     const [dialogState, setDialogState] = useState(false);
+    const [statusUpdated, setStatusUpdated] = useState(true);
 
     useEffect(() => {
         (async (): Promise<void> => {
@@ -47,7 +49,7 @@ export default function Page() {
 
             setComplaints(complaintData.result);
         })()
-    }, [dialogState]);
+    }, [dialogState, statusUpdated]);
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
@@ -171,9 +173,18 @@ export default function Page() {
                             <div>{index + 1}</div>
                             <div>{complaint.subject}</div>
                             <div>{complaint.description}</div>
-                            <div style={{
-                                color: statusColor(complaint.status)
-                            }}>{capitalize(complaint.status)}</div>
+                            <div
+                                className="cursor-pointer font-bold"
+                                style={{
+                                    color: statusColor(complaint.status)
+                                }}
+                                onClick={async () => {
+                                    await changeComplaintStatus(complaint.createdAt, complaint.status === "resolved"? "unresolved" : "resolved");
+                                    setStatusUpdated(!statusUpdated);
+                                }}
+                            >
+                                {capitalize(complaint.status)}
+                            </div>
                             <div>{complaint.createdAt.toLocaleString("en-IN")}</div>
                         </div>
                     ))}

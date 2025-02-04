@@ -6,6 +6,7 @@ import getComplaints, { ComplaintDataAdminType } from "@/utils/getComplaints";
 import capitalize from "@/utils/capitalize";
 import getMyDetails from "@/utils/getMyDetails";
 import statusColor from "@/utils/statusColor";
+import changeComplaintStatus from "@/actions/changeComplaintStatus";
 
 export default function Page() {
     const [userData, setUserData] = useState<{
@@ -16,6 +17,7 @@ export default function Page() {
         name: ""
     });
     const [complaintData, setComplaintData] = useState<ComplaintDataAdminType[]>([]);
+    const [statusUpdated, setStatusUpdated] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -40,7 +42,7 @@ export default function Page() {
 
             setComplaintData(complaints.result);
         })()
-    }, []);
+    }, [statusUpdated]);
 
     return (
         <div
@@ -101,9 +103,17 @@ export default function Page() {
                             </div>
                             <div>{complaint.subject}</div>
                             <div>{complaint.description}</div>
-                            <div style={{
-                                color: statusColor(complaint.status)
-                            }}>{capitalize(complaint.status)}</div>
+                            <div
+                                className="font-bold break-normal cursor-pointer" style={{
+                                    color: statusColor(complaint.status)
+                                }}
+                                onClick={async () => {
+                                    await changeComplaintStatus(complaint.createdAt, complaint.status === "resolved"? "unresolved" : "resolved");
+                                    setStatusUpdated(!statusUpdated);
+                                }}
+                            >
+                                {capitalize(complaint.status)}
+                            </div>
                             <div>{complaint.createdAt.toLocaleString("en-IN")}</div>
                         </div>
                     ))}
