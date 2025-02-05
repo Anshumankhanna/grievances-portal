@@ -10,7 +10,7 @@ export default function NavBar() {
     const router = useRouter();
 
     return (
-        <div className={`${styles.navbar}`}>
+        <div className={styles.navbar}>
             <Link href="/">Home</Link>
             <Link href={"/about"}>About</Link>
             <Link href={"/contact"}>Contact</Link>

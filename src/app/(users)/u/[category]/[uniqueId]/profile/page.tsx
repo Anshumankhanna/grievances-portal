@@ -6,8 +6,10 @@
 import changePassword from "@/actions/changePassword";
 import getUserComplaints, { ComplaintDataUserType } from "@/actions/getUserComplaints";
 import verifyDetails from "@/actions/verifyDetails";
+import PieChart from "@/components/PieChart/PieChart";
 import { AdminType, UserType } from "@/models";
 import getMyDetails from "@/utils/getMyDetails";
+import statusColor from "@/utils/statusColor";
 import Image from "next/image";
 import React, { useEffect, useState } from "react"
 
@@ -178,17 +180,18 @@ export default function Profile() {
             className="flex flex-col size-full p-5 justify-between gap-7 relative"
         >
             <h1 className="text-4xl underline text-center font-mono font-bold text-primary-color">Profile</h1>
-            <div className="flex-grow flex gap-2">
-                {Array.from({ length: unresolved }, (_, index) => (
-                    <div className="bg-red-500 size-11 rounded-full" key={index}></div>
-                ))}
-                {Array.from({ length: resolved }, (_, index) => (
-                    <div className="bg-green-700 size-11 rounded-full" key={index}></div>
-                ))}
-            </div>
-            <div className="text-center">
-                <span className="text-red-500">Unresolved</span> vs <span className="text-green-700">Resolved</span>
-            </div>
+            <PieChart data={[
+                {
+                    name: "Resolved",
+                    color: statusColor("resolved"),
+                    portion: resolved
+                },
+                {
+                    name: "Unresolved",
+                    color: statusColor("unresolved"),
+                    portion: unresolved
+                }
+            ]} />
             <div className="h-fit grid grid-cols-2 gap-3 [&_>_div]:bg-gray-300 [&_>_div]:grid [&_>_div]:grid-cols-2 [&_>_div]:items-center [&_>_*]:rounded-lg [&_>_*]:p-2">
                 {profileData !== null &&
                     <>

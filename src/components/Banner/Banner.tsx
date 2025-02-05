@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Banner() {
     return (
-        <Link className={`${styles.banner}`} href={"/"}>
+        <Link className={styles.banner} href={"/"}>
             <Image
                 src={"/images/msit.png"}
                 alt="MSIT Image"

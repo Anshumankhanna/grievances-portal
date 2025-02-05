@@ -8,6 +8,11 @@ const { AUTH_SECRET: secret, ADMIN_PATH, DEVADMIN_PATH } = process.env;
 
 export default async function middleware(req: NextRequest) {
     const requestedPath: string = req.nextUrl.pathname;
+
+    if (requestedPath === "/about" || requestedPath === "/contact") {
+        return NextResponse.redirect(new URL("/", req.url));
+    }
+
     const token: JWT & SessionUserFields | null = await getToken({ req, secret }) as JWT & SessionUserFields | null;
 
     if (token === null) {
@@ -47,6 +52,8 @@ export default async function middleware(req: NextRequest) {
 export const config = {
     matcher: [
         "/",
+        "/about",
+        "/contact",
         "/u/:path*",
         "/a",
         "/profile",
