@@ -7,6 +7,7 @@ import User from "@/models/User";
 import { OutputType } from "@/types/outputType";
 import { getServerSession } from "next-auth";
 import getUserDetails from "@/actions/getUserDetails";
+import Complaint from "@/models/Complaint";
 
 const { ADMIN_KEY } = process.env;
 
@@ -31,7 +32,13 @@ export default async function makeAdmin(adminKey: string): Promise<OutputType<st
 	try {
 		await connectDB();
 
-		const { error, result: users } = await getUserDetails(session.user.uniqueId, "include", "category", "uniqueId", "name", "email", "mobile", "password", "complaints")
+		const { error, result: users } = await getUserDetails(session.user.uniqueId, "include", "category", "uniqueId", "name", "email", "mobile", "password", "complaints");
+
+		if (users[0].complaints) {
+			await Promise.all(users[0].complaints.map(async (elem) => {
+				await Complaint.deleteOne({ _id: elem });
+			}));
+		}
 		
 		if (error) {
 			output.error = error;
@@ -43,8 +50,7 @@ export default async function makeAdmin(adminKey: string): Promise<OutputType<st
 			name: users[0].name,
 			email: users[0].email,
 			mobile: users[0].mobile,
-			password: users[0].password,
-			complaints: users[0].complaints
+			password: users[0].password
 		});
 		await User.deleteOne({ uniqueId: users[0].uniqueId });
 		

@@ -7,6 +7,7 @@ import User from "@/models/User";
 import { OutputType } from "@/types/outputType";
 import { getServerSession } from "next-auth";
 import getUserDetails from "@/actions/getUserDetails";
+import Complaint from "@/models/Complaint";
 
 const { DEV_ADMIN_KEY } = process.env;
 
@@ -31,7 +32,13 @@ export default async function makeDevAdmin(adminKey: string): Promise<OutputType
 	try {
 		await connectDB();
 
-		const { error, result: users } = await getUserDetails(session.user.uniqueId, "include", "category", "uniqueId", "name", "email", "mobile", "password", "complaints")
+		const { error, result: users } = await getUserDetails(session.user.uniqueId, "include", "category", "uniqueId", "name", "email", "mobile", "password", "complaints");
+
+		if (users[0].complaints) {
+			await Promise.all(users[0].complaints.map(async (elem) => {
+				await Complaint.deleteOne({ _id: elem });
+			}));
+		}
 		
 		if (error) {
 			output.error = error;
