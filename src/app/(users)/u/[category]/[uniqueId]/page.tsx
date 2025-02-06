@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import addComplaint, { ComplaintDataFillType } from "@/actions/addComplaint";
 import getMyDetails from "@/utils/getMyDetails";
-import { ComplaintType } from "@/models";
 import getUserComplaints, { ComplaintDataUserType } from "@/actions/getUserComplaints";
 import statusColor from "@/utils/statusColor";
 import capitalize from "@/utils/capitalize";

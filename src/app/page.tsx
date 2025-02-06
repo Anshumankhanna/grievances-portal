@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+// import getBasePath from "@/actions/getBasePath";
 
 type UserDataLoginType = {
     uniqueId: string;
@@ -43,8 +44,6 @@ export default function Page() {
             password: formData.password,
             redirect: false,
         });
-
-        setIsLoading(false);
         
         if (result === undefined || result.error) {
             // console.error(!result? "Sign In failed" : result.error);
@@ -55,8 +54,12 @@ export default function Page() {
                 setIsValid(true);
             }, 2000);
         } else if (result.ok) {
-            router.push("/u");
+            console.log("we started");
+            // const path = await getBasePath(formData.uniqueId);
+            router.push("/");
         }
+
+        setIsLoading(false);
     };
     return (
         <div className="flex justify-center items-center rounded-lg">

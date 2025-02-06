@@ -73,7 +73,8 @@ export const authOptions: NextAuthOptions = {
 
                 const role = user.category === "student" || user.category === "teacher"? "u" : "a";
 
-                token.basePath = `${role}/${user.category[0]}/${user.uniqueId}`;            }
+                token.basePath = `${role}/${user.category[0]}/${user.uniqueId}`;
+            }
 
             return token;
         },

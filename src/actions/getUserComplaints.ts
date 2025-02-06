@@ -2,7 +2,6 @@
 
 import { connectDB } from "@/lib/mongodb";
 import { ComplaintType } from "@/models";
-import Complaint from "@/models/Complaint";
 import User from "@/models/User";
 import { OutputType } from "@/types/outputType";
 

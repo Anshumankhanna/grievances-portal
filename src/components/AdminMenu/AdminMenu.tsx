@@ -1,9 +1,8 @@
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
+"use client";
+
 import Link from "next/link";
 
-export default async function AdminMenu() {
-    const session = await getServerSession(authOptions);
+export default function AdminMenu() {
 
     return (
         <div className="menu-div">
@@ -19,11 +18,9 @@ export default async function AdminMenu() {
             {/* <Link href={"/export"}>
                 Export
             </Link> */}
-			{session && session.user.category === "devadmin" &&
-                <Link href={"/changeUserPassword"}>
-                    Change User Password
-                </Link>
-            }
+			<Link href={"/changeUserPassword"}>
+                Change User Password
+            </Link>
         </div>
     )
 }

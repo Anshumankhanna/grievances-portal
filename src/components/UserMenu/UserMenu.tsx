@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
 
 export default function UserMenu() {
+    
+
     return (
         <div className="menu-div">
             <Link href={"/"}>
