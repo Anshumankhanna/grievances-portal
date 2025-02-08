@@ -41,3 +41,6 @@ next-env.d.ts
 
 # markdown
 learning.md
+
+# random scripts
+updateDb.mjs
