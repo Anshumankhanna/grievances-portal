@@ -2,21 +2,24 @@
 
 import makeDevAdmin from "@/actions/makeDevAdmin";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function DevadminPage() {
 	const [key, setKey] = useState<string>("");
+	const router = useRouter();
 
 	const handleSubmit = async (submitEvent: React.FormEvent<HTMLFormElement>) => {
 		submitEvent.preventDefault();
 
-		const { error, result } = await makeDevAdmin(key);
+		const { error } = await makeDevAdmin(key);
 
 		if (error) {
 			console.error(error);
 		} else {
-			console.log(result);
-			await signOut({ redirect: true, callbackUrl: "/" });
+			signOut({ redirect: false }).then(() => {
+				router.push("/")
+			});
 		}
 	}
 

@@ -2,21 +2,24 @@
 
 import makeAdmin from "@/actions/makeAdmin";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function AdminPage() {
     const [key, setKey] = useState<string>("");
+    const router = useRouter();
 
     const handleSubmit = async (submitEvent: React.FormEvent<HTMLFormElement>) => {
         submitEvent.preventDefault();
 
-        const { error, result } = await makeAdmin(key);
+        const { error } = await makeAdmin(key);
 
         if (error) {
             console.error(error);
         } else {
-            console.log(result);
-            await signOut({ redirect: true, callbackUrl: "/" });
+            signOut({ redirect: false }).then(() => {
+                router.push("/");
+            });
         }
     }
 

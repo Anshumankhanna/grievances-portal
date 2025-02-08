@@ -8,13 +8,16 @@ import getUserComplaints, { ComplaintDataUserType } from "@/actions/getUserCompl
 import statusColor from "@/utils/statusColor";
 import capitalize from "@/utils/capitalize";
 import changeComplaintStatus from "@/actions/changeComplaintStatus";
+import { useBasePathContext } from "@/context/BasePathContext";
+import { usePathname } from "next/navigation";
 
 const ComplaintDataFillDefault: ComplaintDataFillType = {
 	subject: "",
 	description: "",
 };
 
-export default function Page() {
+export default function UserPage() {
+    const newBasePath = usePathname();
     const [userData, setUserData] = useState<{
         uniqueId: string;
         name: string;
@@ -26,7 +29,11 @@ export default function Page() {
     const [formData, setFormData] = useState<ComplaintDataFillType>(ComplaintDataFillDefault);
     const [dialogState, setDialogState] = useState(false);
     const [statusUpdated, setStatusUpdated] = useState(true);
+    const { setBasePath } = useBasePathContext();
 
+    useEffect(() => {
+        setBasePath(newBasePath);
+    }, [newBasePath, setBasePath]);
     useEffect(() => {
         (async (): Promise<void> => {
             const details = await getMyDetails("uniqueId", "name");

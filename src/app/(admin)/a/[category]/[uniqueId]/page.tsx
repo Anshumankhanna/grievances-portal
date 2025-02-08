@@ -7,10 +7,13 @@ import capitalize from "@/utils/capitalize";
 import getMyDetails from "@/utils/getMyDetails";
 import statusColor from "@/utils/statusColor";
 import changeComplaintStatus from "@/actions/changeComplaintStatus";
+import { usePathname } from "next/navigation";
+import { useBasePathContext } from "@/context/BasePathContext";
 
 type FilterType = "status" | "uniqueId" | "name" | "email" | "mobile" | "selected";
 
 export default function Page() {
+    const newBasePath = usePathname();
     const [userData, setUserData] = useState<{
         uniqueId: string;
         name: string;
@@ -23,7 +26,11 @@ export default function Page() {
     const [statusUpdated, setStatusUpdated] = useState(false);
     const [filter, setFilter] = useState<FilterType>("selected");
     const [filterValue, setFilterValue] = useState<string>("");
+    const { setBasePath } = useBasePathContext();
 
+    useEffect(() => {
+        setBasePath(newBasePath);
+    }, [setBasePath, newBasePath]);
     useEffect(() => {
         (async () => {
             const details = await getMyDetails("uniqueId", "name");

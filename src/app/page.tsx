@@ -5,7 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-// import getBasePath from "@/actions/getBasePath";
+import getBasePath from "@/actions/getBasePath";
 
 type UserDataLoginType = {
     uniqueId: string;
@@ -39,6 +39,7 @@ export default function Page() {
         event.preventDefault(); // Prevent default form submission
         setIsLoading(true);
 
+        const path = await getBasePath(formData.uniqueId);
         const result = await signIn("credentials", {
             uniqueId: formData.uniqueId,
             password: formData.password,
@@ -49,18 +50,16 @@ export default function Page() {
             // console.error(!result? "Sign In failed" : result.error);
 
             setIsValid(false);
-
             setTimeout(() => {
                 setIsValid(true);
             }, 2000);
         } else if (result.ok) {
-            console.log("we started");
-            // const path = await getBasePath(formData.uniqueId);
-            router.push("/");
+            router.push(path.result);
         }
 
         setIsLoading(false);
     };
+
     return (
         <div className="flex justify-center items-center rounded-lg">
             <form className={`bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3 form`} onSubmit={handleSubmit}>
