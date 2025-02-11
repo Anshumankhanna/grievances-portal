@@ -57,8 +57,7 @@ export default async function makeDevAdmin(adminKey: string): Promise<OutputType
 			name: users[0].name,
 			email: users[0].email,
 			mobile: users[0].mobile,
-			password: users[0].password,
-			complaints: users[0].complaints
+			password: users[0].password
 		});
 		
 		output.result = "Devdmin created successfully";

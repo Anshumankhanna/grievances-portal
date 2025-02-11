@@ -1,7 +1,7 @@
 "use client";
 
 import importUserData from "@/actions/importUserData";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type InputSelectType = {
     user: boolean;
@@ -13,10 +13,10 @@ const InputSelectDefault = {
 };
 
 export default function Import() {
-	const [data, setData] = useState<Record<string, unknown>>({}); // eslint-disable-line
+	const [data, setData] = useState<Record<string, unknown> | null>(null); // eslint-disable-line
 	const [inputSelect, setInputSelect] = useState<InputSelectType>(InputSelectDefault);
+	const [isLoading, setIsLoading] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const [isFileUploaded, setIsFileUploaded] = useState(false);
 
 	useEffect(() => {
 		setInputSelect({
@@ -25,7 +25,7 @@ export default function Import() {
 		});
 	}, [])
 
-	const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
 		const file = event.target.files?.[0];
 
 		if (!file || file.name.slice(-5) !== ".json") {
@@ -43,18 +43,6 @@ export default function Import() {
 					}
 
 					const newData = JSON.parse(readEvent.target.result as string);
-					const importUserDataOutput = await importUserData(inputSelect.user? "user" : "complaint", newData);
-
-					if (importUserDataOutput.error || !importUserDataOutput.result) {
-						console.error(importUserDataOutput.error? importUserDataOutput.error : "Something went wrong");
-						return ;
-					}
-
-					setIsFileUploaded(true);
-
-					setTimeout(() => {
-						setIsFileUploaded(false);
-					}, 2000);
 
 					setData(newData);
 					res("success");
@@ -68,6 +56,10 @@ export default function Import() {
 
 			reader.readAsText(file);
 		});
+
+		if (fileInputRef.current) {
+			fileInputRef.current.value = "";
+		}
 	};
 	const handleSelectInput = (event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
 		const name = event.currentTarget.textContent;
@@ -78,6 +70,25 @@ export default function Import() {
 			[key]: true
 		});
 	};
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+		event.preventDefault();
+		setIsLoading(true);
+
+		if (data === null) {
+			setIsLoading(false);
+			return ;
+		}
+
+		const importUserDataOutput = await importUserData(inputSelect.user? "user" : "complaint", data);
+
+		if (importUserDataOutput.error) {
+			console.error(importUserDataOutput.error);
+			return ;
+		}
+
+		setData(Object.fromEntries(importUserDataOutput.result.map((elem, index) => [index, elem])));
+		setIsLoading(false);
+	}
 
 	return (
 		<div className="size-full flex flex-col">
@@ -96,15 +107,12 @@ export default function Import() {
 					Complaint
 				</div>
 			</div>
-			<div className="flex-grow flex flex-col gap-3 p-3">
-				<div className="p-3 bg-slate-200 rounded-lg">
-					{!isFileUploaded? "Nothing selected" : "Done"}
-				</div>
-				<div className="flex justify-center">
+			<form className="flex-grow flex flex-col gap-3 p-3" onSubmit={handleSubmit}>
+				<div className="flex justify-between">
 					<input type="file" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
 					<button
 						type="button"
-						className="bg-tertiary-color px-5 py-2 rounded-md text-white hover:underline"
+						className="bg-tertiary-color px-5 py-2 uppercase rounded-md text-white hover:underline"
 						onClick={() => {
 							if (fileInputRef.current) {
 								fileInputRef.current.click();
@@ -113,8 +121,18 @@ export default function Import() {
 					>
 						CHOOSE FILE
 					</button>
+					<button
+						type="submit"
+						className="bg-tertiary-color px-5 py-2 rounded-md uppercase text-white hover:underline disabled:bg-gray-400"
+						disabled={isLoading}
+					>
+						Submit
+					</button>
 				</div>
-			</div>
+				<pre className="p-3 bg-slate-200 rounded-lg text-wrap">
+					{data? JSON.stringify(data, null, 4) : "Nothing selected"}
+				</pre>
+			</form>
 		</div>
 	);
 }

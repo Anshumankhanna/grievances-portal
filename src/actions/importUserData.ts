@@ -12,27 +12,31 @@ import getUserDetails from "./getUserDetails";
 // const UserRequiredKeys = ["category", "uniqueId", "name", "email", "mobile", "password"] as const;
 // const ComplaintRequiredKeys = ["user", "subject", "description"] as const;
 
-export default async function importUserData(model: "user" | "complaint", data: Record<string, any>): Promise<OutputType<boolean>> { // eslint-disable-line
-	const output: OutputType<boolean> = {
+type CustomUserDataFillType = UserDataFillType & {
+	createdAt: Date
+};
+type CustomComplaintDataFillType = ComplaintDataFillType & {
+	createdAt: Date
+};
+
+export default async function importUserData(model: "user" | "complaint", data: Record<string, any>): Promise<OutputType<string[]>> { // eslint-disable-line
+	const output: OutputType<string[]> = {
 		error: null,
-		result: false
+		result: []
 	};
 
 	try {
 		await connectDB();
 		
 		if (model === "user") {
-			await (new Promise(async (res) => {
-				await Promise.all(
-					Object.values(data).map(async (row: Partial<UserDataFillType>) => {
-						output.result = false;
-
-						if (row.category && row.uniqueId && row.name && row.email && row.mobile && row.password) {
+			output.result = await Promise.all(
+				Object.values(data).map(async (row: Partial<CustomUserDataFillType>) => {
+					if (row.category && row.uniqueId && row.name && row.email && row.mobile && row.password && row.createdAt) {
+						try {
 							const user = await getUserDetails(row.uniqueId, "include", "name");
 
 							if (user.result.length > 0) {
-								output.error = `User already exists with ${row.uniqueId}`;
-								return ;
+								return `${row.uniqueId} already exists`;
 							}
 
 							const hashedPassword = await bcrypt.hash(row.password, 10);
@@ -43,53 +47,47 @@ export default async function importUserData(model: "user" | "complaint", data: 
 								name: row.name,
 								email: row.email,
 								mobile: row.mobile,
-								password: hashedPassword
+								password: hashedPassword,
+								createdAt: row.createdAt
 							});
-		
-							output.result = true;
+						} catch (error) {
+							return (error as Error).message;
 						}
-					})
-				);
+					}
 
-				if (output.result) {
-					res("Sucess");
-				}
-			}));
+					return "Success";
+				})
+			);
 		} else {
-			await (new Promise(async (res) => {
-				await Promise.all(
-					Object.values(data).map(async (row: Partial<ComplaintDataFillType & { uniqueId: string; }>) => {
-						output.result = false;
-	
-						if (row.description && row.subject && row.uniqueId) {
+			output.result = await Promise.all(
+				Object.values(data).map(async (row: Partial<CustomComplaintDataFillType & { uniqueId: string; }>) => {
+					if (row.description && row.subject && row.uniqueId && row.createdAt) {
+						try {
 							const user = await User.findOne({ uniqueId: row.uniqueId }).select("_id complaints");
 							
 							if (!user) {
-								output.error = `User not found for ${row.uniqueId}`;
-								return ;
+								return `${row.uniqueId} doesn't exist`;
 							}
 		
 							const complaint = new Complaint({
 								user: user._id,
 								subject: row.subject,
-								description: row.description
+								description: row.description,
+								createdAt: row.createdAt
 							});
 		
 							user.complaints.push(complaint._id);
 		
 							await complaint.save();
 							await user.save();
-		
-							output.result = true;
+						} catch (error) {
+							return (error as Error).message;
 						}
-					})
-				)
+					}
 
-				if (output.result) {
-					res("Sucess");
-					return ;
-				}
-			}));
+					return "Sucess";
+				})
+			)
 		}
 	} catch (error) {
 		output.error = "Couldn't import data";

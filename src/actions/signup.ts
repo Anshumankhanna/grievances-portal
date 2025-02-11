@@ -19,7 +19,7 @@ export const signup = async (userdata: UserDataFillType): Promise<OutputType<str
 
         const user = await getUserDetails(userdata.uniqueId, "include", "name");
 
-        if (user !== null) {
+        if (user.result.length > 0) {
             output.error = "User exists";
             return output;
         }

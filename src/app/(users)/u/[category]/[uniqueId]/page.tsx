@@ -7,7 +7,6 @@ import getMyDetails from "@/utils/getMyDetails";
 import getUserComplaints, { ComplaintDataUserType } from "@/actions/getUserComplaints";
 import statusColor from "@/utils/statusColor";
 import capitalize from "@/utils/capitalize";
-import changeComplaintStatus from "@/actions/changeComplaintStatus";
 import { useBasePathContext } from "@/context/BasePathContext";
 import { usePathname } from "next/navigation";
 
@@ -28,7 +27,6 @@ export default function UserPage() {
     const [complaints, setComplaints] = useState<ComplaintDataUserType[]>([]);
     const [formData, setFormData] = useState<ComplaintDataFillType>(ComplaintDataFillDefault);
     const [dialogState, setDialogState] = useState(false);
-    const [statusUpdated, setStatusUpdated] = useState(true);
     const { setBasePath } = useBasePathContext();
 
     useEffect(() => {
@@ -55,7 +53,7 @@ export default function UserPage() {
 
             setComplaints(complaintData.result);
         })()
-    }, [dialogState, statusUpdated]);
+    }, [dialogState]);
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
@@ -183,10 +181,6 @@ export default function UserPage() {
                                 className="cursor-pointer font-bold"
                                 style={{
                                     color: statusColor(complaint.status)
-                                }}
-                                onClick={async () => {
-                                    await changeComplaintStatus(complaint.createdAt, complaint.status === "resolved"? "unresolved" : "resolved");
-                                    setStatusUpdated(!statusUpdated);
                                 }}
                             >
                                 {capitalize(complaint.status)}

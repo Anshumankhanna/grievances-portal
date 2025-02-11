@@ -17,6 +17,7 @@ const UserDataFillDefault: UserDataFillType = {
 export default function Page() {
     const [formData, setFormData] = useState<UserDataFillType>(UserDataFillDefault);
     const [error, setError] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
@@ -37,18 +38,20 @@ export default function Page() {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
-        
+        setIsLoading(true);
+
         const result = await signup(formData);
 
         if (result.error) {
             setError(result.error);
-
             setTimeout(() => {
                 setError("");
             }, 5000);
         } else {
             router.push("/");
         }
+
+        setIsLoading(false);
     }
 
     return (
@@ -58,10 +61,9 @@ export default function Page() {
                     className={`bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3 overflow-y-auto form`}
                     onSubmit={handleSubmit}
                 >
-                    {error === "" &&
+                    {error === ""?
                         <h1 className="text-2xl text-center">Sign Up</h1>
-                    }
-                    {error !== "" &&
+                        :
                         <h1 className="text-2xl text-center text-red-500">{error}</h1>
                     }
                     <div>
@@ -141,9 +143,10 @@ export default function Page() {
                     </div>
                     <button
                         type="submit"
-                        className="bg-tertiary-color text-white p-2 rounded-lg font-bold"
+                        className="bg-tertiary-color text-white p-2 rounded-lg font-bold disabled:bg-gray-400"
+                        disabled={isLoading}
                     >
-                        Sign Up
+                        {isLoading? "Trying..." : "Sign up"}
                     </button>
                     <span className="mt-4 text-center font-bold">
                         Have an account? <Link className="text-tertiary-color" href="/">Login</Link> 
