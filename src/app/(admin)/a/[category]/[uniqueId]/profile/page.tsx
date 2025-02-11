@@ -178,9 +178,9 @@ export default function Profile() {
 
     return (
         <div
-            className="flex flex-col size-full p-5 justify-between gap-7 relative"
+            className="grid grid-cols-2 size-full p-5 justify-between relative"
         >
-            <h1 className="text-4xl underline text-center font-mono font-bold text-primary-color">Profile</h1>
+            <h1 className="text-4xl underline text-center font-mono font-bold text-primary-color col-span-2">Profile</h1>
             <PieChart data={[
                 {
                     name: "Resolved",
@@ -206,7 +206,7 @@ export default function Profile() {
                         </div>
                         <div>
                             <div>Email:</div>
-                            <div>{profileData.email}</div>
+                            <div className="break-words">{profileData.email}</div>
                         </div>
                         <div>
                             <div>Mobile:</div>

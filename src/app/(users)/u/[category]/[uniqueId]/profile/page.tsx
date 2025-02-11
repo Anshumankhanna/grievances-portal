@@ -177,7 +177,7 @@ export default function Profile() {
 
     return (
         <div
-            className="grid grid-cols-2 size-full p-5 justify-between gap-7 relative"
+            className="grid grid-cols-2 size-full p-5 justify-between relative"
         >
             <h1 className="text-4xl underline text-center font-mono font-bold text-primary-color col-span-2">Profile</h1>
             <PieChart data={[

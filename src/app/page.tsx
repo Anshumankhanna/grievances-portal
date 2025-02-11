@@ -60,7 +60,7 @@ export default function Page() {
             <form className={`bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3 form`} onSubmit={handleSubmit}>
                 <h1 className="text-3xl text-black text-center text-tertiary-color font-bold">Login</h1>
                 <div>
-                    <label className="text-black">Unique ID</label>
+                    <label htmlFor="uniqueId" className="text-black">Unique ID</label>
                     <input
                         type="text"
                         name="uniqueId"
@@ -72,7 +72,7 @@ export default function Page() {
                     />
                 </div>
                 <div>
-                    <label className="text-black">Password</label>
+                    <label htmlFor="password" className="text-black">Password</label>
                     <input
                         type="password"
                         name="password"

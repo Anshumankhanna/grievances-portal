@@ -26,7 +26,7 @@
         grid-template-columns: 1fr 3fr 3fr 7fr 2fr 2fr;
 
         & > div {
-            @apply p-1 border border-r-slate-400;
+            @apply p-1 border border-r-slate-400 border-b-slate-400;
             word-break: break-all;
         }
 
@@ -37,7 +37,7 @@
         }
 
         & > div:nth-last-child(1) {
-            @apply border-none;
+            @apply border-r-0;
         }
     }
 

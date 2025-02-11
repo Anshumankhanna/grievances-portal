@@ -96,6 +96,8 @@ export default function Page() {
                     </select>
                     <input
                         type="text"
+                        name="filterinput"
+                        id="filterinput"
                         value={filterValue}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             if (event.target.value === "") {
@@ -110,7 +112,7 @@ export default function Page() {
             </div>
             <div className="flex-grow h-72 overflow-y-auto p-3">
                 <div
-                    className={`${styles["table-grid"]}`}
+                    className={styles["table-grid"]}
                 >
                     <div>
                         <div>
@@ -135,7 +137,7 @@ export default function Page() {
                     {displayComplaintData.map((complaint, index) => (
                         <div key={index}>
                             <div>{index + 1}</div>
-                            <div className="grid grid-cols-2 gap-y-2 size-full items-center [&_>_*]:border-b-2 [&_>_*]:border-black [&_>_*]:size-full">
+                            <div className="grid grid-cols-2 p-0 size-full items-center [&_>_div]:border-b [&_>_div]:border-black [&_>_div]:size-full [&_>_div:nth-last-child(-n+2)]:border-b-0">
                                 <div>ID:</div>
                                 <div>{complaint.user.uniqueId}</div>
                                 <div>Name:</div>
@@ -145,8 +147,6 @@ export default function Page() {
                                 <div className="text-blue-500 underline"><a href={`mailto:${complaint.user.email}`}>{complaint.user.email}</a></div>
                                 <div>Mobile:</div>
                                 <div>{complaint.user.mobile}</div>
-                                <div>Created:</div>
-                                <div>{complaint.user.createdAt.toLocaleString("en-IN")}</div>
                             </div>
                             <div>{complaint.subject}</div>
                             <div>{complaint.description}</div>
