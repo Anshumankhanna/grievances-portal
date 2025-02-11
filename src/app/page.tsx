@@ -24,15 +24,10 @@ export default function Page() {
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
         const { name, value } = event.target;
-        let inputValue= value;
-
-        if (name === "uniqueId") {
-            inputValue = inputValue.slice(0, 11);
-        }
 
         setFormData({
             ...formData,
-            [name]: inputValue
+            [name]: value
         })
     }
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -67,7 +62,7 @@ export default function Page() {
                 <div>
                     <label className="text-black">Unique ID</label>
                     <input
-                        type="number"
+                        type="text"
                         name="uniqueId"
                         id="uniqueId"
                         placeholder="Enter your unique ID"

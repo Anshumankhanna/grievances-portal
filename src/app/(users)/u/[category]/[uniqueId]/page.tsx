@@ -11,9 +11,58 @@ import { useBasePathContext } from "@/context/BasePathContext";
 import { usePathname } from "next/navigation";
 
 const ComplaintDataFillDefault: ComplaintDataFillType = {
-	subject: "",
-	description: "",
+    subject: "",
+    description: "",
 };
+
+function ComplaintsComponent({ complaints }: { complaints: ComplaintDataUserType[] }) {
+    return (
+        <div className="flex-grow h-72 overflow-y-auto p-3">
+            <div className={styles["table-grid"]}>
+                <div>
+                    <div>
+                        S.no.
+                    </div>
+                    <div>
+                        Subject
+                    </div>
+                    <div>
+                        Description
+                    </div>
+                    <div>
+                        Status
+                    </div>
+                    <div>
+                        Created
+                    </div>
+                </div>
+                {complaints.map((complaint, index) => (
+                    <div key={index}>
+                        <div>{index + 1}</div>
+                        <div>{complaint.subject}</div>
+                        <div>{complaint.description}</div>
+                        <div
+                            className="font-bold"
+                            style={{
+                                color: statusColor(complaint.status)
+                            }}
+                        >
+                            {capitalize(complaint.status)}
+                        </div>
+                        <div>{complaint.createdAt.toLocaleString("en-IN")}</div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+};
+function BlankComponent({ message }: { message: string }) {
+    return (
+        <div className="bg-slate-200 flex-grow rounded-lg mb-3 p-3 text-3xl text-center text-gray-500">
+            {message}
+        </div>
+    )
+}
 
 export default function UserPage() {
     const newBasePath = usePathname();
@@ -24,6 +73,7 @@ export default function UserPage() {
         uniqueId: "",
         name: ""
     });
+    const [loadingComplaints, setLoadingComplaints] = useState(true);
     const [complaints, setComplaints] = useState<ComplaintDataUserType[]>([]);
     const [formData, setFormData] = useState<ComplaintDataFillType>(ComplaintDataFillDefault);
     const [dialogState, setDialogState] = useState(false);
@@ -37,7 +87,7 @@ export default function UserPage() {
             const details = await getMyDetails("uniqueId", "name");
 
             if (details.error || !details.result.uniqueId || !details.result.name) {
-                return ;
+                return;
             }
 
             setUserData({
@@ -48,16 +98,17 @@ export default function UserPage() {
             const complaintData = await getUserComplaints(details.result.uniqueId);
 
             if (complaintData.error) {
-                return ;
+                return;
             }
 
             setComplaints(complaintData.result);
+            setLoadingComplaints(false);
         })()
     }, [dialogState]);
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
-        
+
         setFormData({
             ...formData,
             [name]: value,
@@ -69,14 +120,14 @@ export default function UserPage() {
             subject: formData.subject.trim(),
             description: formData.description.trim(),
         });
-        
+
         const { error, result } = await addComplaint(formData); //eslint-disable-line
 
         if (error !== null) {
             console.error(error);
         } else {
             setDialogState(false);
-			setFormData(ComplaintDataFillDefault);
+            setFormData(ComplaintDataFillDefault);
         }
     };
 
@@ -84,10 +135,11 @@ export default function UserPage() {
         <div
             className="flex flex-grow flex-col
                 text-black
+                [&_>_div]: px-10
             "
         >
             {/* this is the nav-strip */}
-            <div className="h-24 flex justify-between items-center px-10 py-5">
+            <div className="h-24 flex justify-between items-center py-5">
                 <div className="flex flex-col justify-between h-full text-xl">
                     <div>
                         <span className="font-bold">Name:</span> {userData?.name ?? "Name"}
@@ -142,7 +194,7 @@ export default function UserPage() {
                                 Submit
                             </button>
                             <button
-								type="button"
+                                type="button"
                                 onClick={() => setDialogState(false)}
                             >
                                 Cancel
@@ -151,45 +203,7 @@ export default function UserPage() {
                     </form>
                 </dialog>
             </div>
-            <div className="flex-grow h-72 overflow-y-auto p-3">
-                <div
-                    className={`${styles["table-grid"]}`}
-                >
-                    <div>
-                        <div>
-                            S.no.
-                        </div>
-                        <div>
-                            Subject
-                        </div>
-                        <div>
-                            Description
-                        </div>
-                        <div>
-                            Status
-                        </div>
-                        <div>
-                            Created
-                        </div>
-                    </div>
-                    {complaints.map((complaint, index) => (
-                        <div key={index}>
-                            <div>{index + 1}</div>
-                            <div>{complaint.subject}</div>
-                            <div>{complaint.description}</div>
-                            <div
-                                className="cursor-pointer font-bold"
-                                style={{
-                                    color: statusColor(complaint.status)
-                                }}
-                            >
-                                {capitalize(complaint.status)}
-                            </div>
-                            <div>{complaint.createdAt.toLocaleString("en-IN")}</div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+            {complaints.length === 0 ? <BlankComponent message={loadingComplaints? "Loading..." : "No complaints yet"} /> : <ComplaintsComponent complaints={complaints} />}
         </div>
     )
 };

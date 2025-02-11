@@ -177,9 +177,9 @@ export default function Profile() {
 
     return (
         <div
-            className="flex flex-col size-full p-5 justify-between gap-7 relative"
+            className="grid grid-cols-2 size-full p-5 justify-between gap-7 relative"
         >
-            <h1 className="text-4xl underline text-center font-mono font-bold text-primary-color">Profile</h1>
+            <h1 className="text-4xl underline text-center font-mono font-bold text-primary-color col-span-2">Profile</h1>
             <PieChart data={[
                 {
                     name: "Resolved",
@@ -205,7 +205,7 @@ export default function Profile() {
                         </div>
                         <div>
                             <div>Email:</div>
-                            <div>{profileData.email}</div>
+                            <div className="break-words">{profileData.email}</div>
                         </div>
                         <div>
                             <div>Mobile:</div>
@@ -232,11 +232,11 @@ export default function Profile() {
             <dialog className="absolute-center bg-panel-background border border-black p-4 rounded-lg" open={dialogState}>
                 <form className="grid grid-cols-[1fr_2fr] gap-y-5 items-center" onSubmit={changeUserPassword}>
                     <h1 className="text-4xl underline text-tertiary-color col-span-2 text-center">Change Password</h1>
-                    <label htmlFor="oldPassword">Old Password:</label>
+                    <label htmlFor="old">Old Password:</label>
                     <PasswordComponent name="old" inputValue={passwords.old} state={passwordState.old} stateChangeHandler={handlePasswordStateChange} handlePasswordChange={handlePasswordChange} />
-                    <label htmlFor="oldPassword">New Password:</label>
+                    <label htmlFor="new">New Password:</label>
                     <PasswordComponent name="new" inputValue={passwords.new} state={passwordState.new} stateChangeHandler={handlePasswordStateChange} handlePasswordChange={handlePasswordChange} />
-                    <label htmlFor="oldPassword">Confirm Password:</label>
+                    <label htmlFor="newAgain">Confirm Password:</label>
                     <PasswordComponent name="newAgain" inputValue={passwords.newAgain} state={passwordState.newAgain} stateChangeHandler={handlePasswordStateChange} handlePasswordChange={handlePasswordChange} />
                     <div className="col-span-2 grid grid-cols-2 gap-x-4">
                         <button

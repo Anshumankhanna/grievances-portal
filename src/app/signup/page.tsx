@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { signup, UserDataFillType } from "@/actions/signup";
 import { useRouter } from "next/navigation";
+import { UserCategories } from "@/models";
+import capitalize from "@/utils/capitalize";
 
 const UserDataFillDefault: UserDataFillType = {
     category: "student",
@@ -24,9 +26,7 @@ export default function Page() {
         const { name, value } = event.target;
         let inputValue = value;
 
-        if (name === "uniqueId") {
-            inputValue = inputValue.slice(0, 11);
-        } else if (name === "mobile") {
+        if (name === "mobile") {
             inputValue = inputValue.slice(0, 10);
         }
 
@@ -77,8 +77,9 @@ export default function Page() {
                             required
                         >
                             <option value="select" disabled>Select</option>
-                            <option value="student">Student</option>
-                            <option value="teacher">Teacher</option>
+                            {UserCategories.map((elem, index) => (
+                                <option key={index} value={elem}>{capitalize(elem)}</option>
+                            ))}
                         </select>
                     </div>
                     <div>

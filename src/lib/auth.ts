@@ -70,10 +70,6 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 token.uniqueId = user.uniqueId;
                 token.category = user.category;
-
-                const role = user.category === "student" || user.category === "teacher"? "u" : "a";
-
-                token.basePath = `${role}/${user.category[0]}/${user.uniqueId}`;
             }
 
             return token;
@@ -81,8 +77,7 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             if (token) {
                 session.user.uniqueId = token.uniqueId as string;
-                session.user.category = token.category as UsersType["category"];
-                session.user.basePath = token.basePath as string;
+                session.user.category = token.category as UserCategoriesTypes | AdminCategoriesType;
             }
 
             return session;
