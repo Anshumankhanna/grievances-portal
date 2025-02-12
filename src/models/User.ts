@@ -1,11 +1,11 @@
 import mongoose, { Schema, model, Document, ObjectId } from "mongoose";
 
 export const UserCategories = ["student", "parent", "teacher"] as const;
-export type UserCategoriesTypes = typeof UserCategories[number];
+export type UserCategoriesType = typeof UserCategories[number];
 
 export type UserType = {
     _id: ObjectId; // this is necessary
-    category: UserCategoriesTypes;
+    category: UserCategoriesType;
     uniqueId: string;
     name: string;
     email: string;

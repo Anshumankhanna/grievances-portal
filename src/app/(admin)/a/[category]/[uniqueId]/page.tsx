@@ -9,10 +9,14 @@ import statusColor from "@/utils/statusColor";
 import changeComplaintStatus from "@/actions/changeComplaintStatus";
 import { usePathname } from "next/navigation";
 import { useBasePathContext } from "@/context/BasePathContext";
+import { useAdminSideComplaintsContext } from "./AdminSideComplaintsContext";
+import orderComplaints from "@/utils/orderComplaints";
+import Image from "next/image";
 
 type FilterType = "status" | "uniqueId" | "name" | "email" | "mobile" | "selected";
 
-export default function Page() {
+export default function AdminPage() {
+    const { complaints, setComplaints } = useAdminSideComplaintsContext();
     const newBasePath = usePathname();
     const [userData, setUserData] = useState<{
         uniqueId: string;
@@ -21,11 +25,11 @@ export default function Page() {
         uniqueId: "",
         name: ""
     });
-    const [complaintData, setComplaintData] = useState<ComplaintDataAdminType[]>([]);
     const [displayComplaintData, setDisplayComplaintData] = useState<ComplaintDataAdminType[]>([]);
     const [statusUpdated, setStatusUpdated] = useState(false);
     const [filter, setFilter] = useState<FilterType>("selected");
     const [filterValue, setFilterValue] = useState<string>("");
+    const [arrowOrientation, setArrowOrientation] = useState(true);
     const { setBasePath } = useBasePathContext();
 
     useEffect(() => {
@@ -52,21 +56,22 @@ export default function Page() {
                 return ;
             }
 
-            setComplaintData(complaints.result);
+            orderComplaints(complaints.result, "desc");
+            setComplaints(complaints.result);
             setDisplayComplaintData(complaints.result);
         })()
-    }, [statusUpdated]);
+    }, [statusUpdated, setComplaints]);
 
     const filterData = () => {
         if (filter === "selected") {
             return ;
         }
         if (filter === "status") {
-            setDisplayComplaintData(complaintData.filter((elem) => elem.status === filterValue));
+            setDisplayComplaintData(complaints.filter((elem) => elem.status === filterValue));
             return ;
         }
 
-        setDisplayComplaintData(complaintData.filter((elem) => elem.user[filter] === filterValue));
+        setDisplayComplaintData(complaints.filter((elem) => elem.user[filter] === filterValue));
     };
 
     return (
@@ -101,7 +106,7 @@ export default function Page() {
                         value={filterValue}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             if (event.target.value === "") {
-                                setDisplayComplaintData(complaintData);
+                                setDisplayComplaintData(complaints);
                             }
 
                             setFilterValue(event.target.value);
@@ -130,8 +135,12 @@ export default function Page() {
                         <div>
                             Status
                         </div>
-                        <div>
+                        <div className="flex justify-around">
                             Created
+                            <Image src="/images/angle-up-solid.svg" width={12} height={12} alt="Arrow" className={`cursor-pointer ${arrowOrientation? "rotate-0" : "rotate-180"}`} onClick={() => {
+                                setArrowOrientation(!arrowOrientation);
+                                orderComplaints(complaints, arrowOrientation? "asc" : "desc");
+                            }} />
                         </div>
                     </div>
                     {displayComplaintData.map((complaint, index) => (

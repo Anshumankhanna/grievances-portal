@@ -3,10 +3,10 @@ import type { NextAuthOptions } from "next-auth";
 import credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import Admin, { AdminCategoriesType } from "@/models/Admin";
-import { UserCategoriesTypes } from "@/models";
+import { UserCategoriesType } from "@/models";
 
 export type UsersType = {
-    category: AdminCategoriesType | UserCategoriesTypes;
+    category: AdminCategoriesType | UserCategoriesType;
     uniqueId: string;
     basePath: string;
     password: string;
@@ -77,7 +77,7 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             if (token) {
                 session.user.uniqueId = token.uniqueId as string;
-                session.user.category = token.category as UserCategoriesTypes | AdminCategoriesType;
+                session.user.category = token.category as UserCategoriesType | AdminCategoriesType;
             }
 
             return session;

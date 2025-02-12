@@ -4,18 +4,24 @@ import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import addComplaint, { ComplaintDataFillType } from "@/actions/addComplaint";
 import getMyDetails from "@/utils/getMyDetails";
-import getUserComplaints, { ComplaintDataUserType } from "@/actions/getUserComplaints";
+import getUserComplaints from "@/actions/getUserComplaints";
 import statusColor from "@/utils/statusColor";
 import capitalize from "@/utils/capitalize";
 import { useBasePathContext } from "@/context/BasePathContext";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+import orderComplaints from "@/utils/orderComplaints";
+import { useUserSideComplaintsContext } from "./UserSideComplaintsContext";
 
 const ComplaintDataFillDefault: ComplaintDataFillType = {
     subject: "",
     description: "",
 };
 
-function ComplaintsComponent({ complaints }: { complaints: ComplaintDataUserType[] }) {
+function ComplaintsComponent() {
+    const { complaints } = useUserSideComplaintsContext();
+    const [arrowOrientation, setArrowOrientation] = useState(true);    // "true" means upright, "false" means down.
+
     return (
         <div className="flex-grow h-72 overflow-y-auto p-3">
             <div className={styles["table-grid"]}>
@@ -32,8 +38,12 @@ function ComplaintsComponent({ complaints }: { complaints: ComplaintDataUserType
                     <div>
                         Status
                     </div>
-                    <div>
+                    <div className="flex justify-around">
                         Created
+                        <Image src="/images/angle-up-solid.svg" width={12} height={12} alt="Arrow" className={`cursor-pointer ${arrowOrientation? "rotate-0" : "rotate-180"}`} onClick={() => {
+                            setArrowOrientation(!arrowOrientation);
+                            orderComplaints(complaints, arrowOrientation? "asc" : "desc");
+                        }} />
                     </div>
                 </div>
                 {complaints.map((complaint, index) => (
@@ -65,6 +75,7 @@ function BlankComponent({ message }: { message: string }) {
 }
 
 export default function UserPage() {
+    const { complaints, setComplaints } = useUserSideComplaintsContext();
     const newBasePath = usePathname();
     const [userData, setUserData] = useState<{
         uniqueId: string;
@@ -74,7 +85,6 @@ export default function UserPage() {
         name: ""
     });
     const [loadingComplaints, setLoadingComplaints] = useState(true);
-    const [complaints, setComplaints] = useState<ComplaintDataUserType[]>([]);
     const [formData, setFormData] = useState<ComplaintDataFillType>(ComplaintDataFillDefault);
     const [dialogState, setDialogState] = useState(false);
     const { setBasePath } = useBasePathContext();
@@ -100,11 +110,12 @@ export default function UserPage() {
             if (complaintData.error) {
                 return;
             }
-
+            
+            orderComplaints(complaintData.result, "desc");
             setComplaints(complaintData.result);
             setLoadingComplaints(false);
-        })()
-    }, [dialogState]);
+        })();
+    }, [dialogState, setComplaints]);
 
     const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
@@ -203,7 +214,7 @@ export default function UserPage() {
                     </form>
                 </dialog>
             </div>
-            {complaints.length === 0 ? <BlankComponent message={loadingComplaints? "Loading..." : "No complaints yet"} /> : <ComplaintsComponent complaints={complaints} />}
+            {complaints.length === 0 ? <BlankComponent message={loadingComplaints? "Loading..." : "No complaints yet"} /> : <ComplaintsComponent />}
         </div>
     )
 };
