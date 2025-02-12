@@ -236,21 +236,22 @@ export default function Profile() {
             </h1>
 
             {/* Pie Chart */}
-            <PieChart
-                data={[
-                    {
-                        name: "Resolved",
-                        color: statusColor("resolved"),
-                        portion: resolved,
-                    },
-                    {
-                        name: "Unresolved",
-                        color: statusColor("unresolved"),
-                        portion: unresolved,
-                    },
-                ]}
-                className="w-full md:w-auto mx-auto"
-            />
+            <div className="w-full md:w-auto mx-auto">
+                <PieChart
+                    data={[
+                        {
+                            name: "Resolved",
+                            color: statusColor("resolved"),
+                            portion: resolved,
+                        },
+                        {
+                            name: "Unresolved",
+                            color: statusColor("unresolved"),
+                            portion: unresolved,
+                        },
+                    ]}
+                />
+            </div>
 
             {/* Profile Information */}
             <div className="h-fit grid grid-cols-1 md:grid-cols-2 gap-3">

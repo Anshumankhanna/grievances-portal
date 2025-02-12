@@ -22,11 +22,12 @@ function ComplaintsComponent({
 }: {
     complaints: ComplaintDataUserType[];
 }) {
-    const [expandedIndex, setExpandedIndex] = useState(null);
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
-    const toggleExpand = (index) => {
+    const toggleExpand = (index: number) => {
         setExpandedIndex(expandedIndex === index ? null : index);
     };
+
     return (
         <div className="flex flex-col flex-grow h-72 overflow-y-auto p-3">
             <div className="w-full min-w-[600px]">
