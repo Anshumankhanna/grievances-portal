@@ -1,24 +1,10 @@
 .navbar {
-    @apply flex
-    justify-start
-    items-center
-    w-full
-    h-16
-    bg-tertiary-color
-    font-bold
-    text-white;
-
-    gap: 2vw;
-    padding-left: 2vw;
+    @apply flex h-10 md:h-16 items-center justify-center bg-tertiary-color font-bold text-white md:text-lg text-sm;
+    gap: 2em;
+    md: gap-10em;
     flex-shrink: 0;
 
     & > * {
-        @apply flex
-        justify-center
-        items-center
-        h-full
-        px-2.5
-        uppercase
-        darken;
+        @apply flex justify-center items-center h-full px-1.5 uppercase darken;
     }
 }

@@ -8,12 +8,8 @@ export default function UserMenu() {
 
     return (
         <div className="menu-div">
-            <Link href={`${basePath}/`}>
-                Dashboard
-            </Link>
-            <Link href={`${basePath}/profile`}>
-                Profile
-            </Link>
+            <Link href={`${basePath}/`}>Dashboard</Link>
+            <Link href={`${basePath}/profile`}>Profile</Link>
         </div>
-    )
+    );
 }

@@ -52,22 +52,19 @@ body {
 input,
 select,
 textarea {
-    @apply  px-2 py-1 border border-gray-500 rounded-md;
+    @apply px-2 py-1 border border-gray-500 rounded-md;
 }
 
 .menu-div {
-    @apply bg-tertiary-color
-    flex flex-col justify-start items-center gap-3 flex-shrink-0
-    w-44 py-3
-    text-xl text-white font-bold;
+    @apply bg-tertiary-color flex w-full md:w-44 
+    flex-row md:flex-col justify-start items-center 
+    gap-3 flex-shrink-0 py-3 text-lg text-white font-bold;
 
     & > * {
-        @apply w-full p-3
-        cursor-pointer;
+        @apply w-full p-3 cursor-pointer text-center;
 
         &:hover {
-            @apply bg-panel-background
-            text-tertiary-color;
+            @apply bg-panel-background text-tertiary-color;
         }
     }
 }

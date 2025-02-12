@@ -14,15 +14,18 @@ const UserDataFillDefault: UserDataFillType = {
     email: "",
     mobile: 0,
     password: "",
-}
+};
 
 export default function Page() {
-    const [formData, setFormData] = useState<UserDataFillType>(UserDataFillDefault);
+    const [formData, setFormData] =
+        useState<UserDataFillType>(UserDataFillDefault);
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+    const handleFormDataChange = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    ): void => {
         const { name, value } = event.target;
         let inputValue = value;
 
@@ -32,11 +35,13 @@ export default function Page() {
 
         setFormData({
             ...formData,
-            [name]: inputValue
+            [name]: inputValue,
         });
-    }
+    };
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    const handleSubmit = async (
+        event: React.FormEvent<HTMLFormElement>,
+    ): Promise<void> => {
         event.preventDefault();
         setIsLoading(true);
 
@@ -52,20 +57,22 @@ export default function Page() {
         }
 
         setIsLoading(false);
-    }
+    };
 
     return (
         <>
             <div className="flex justify-center items-center rounded-lg">
-                <form 
+                <form
                     className={`bg-white py-3 px-4 w-96 border rounded-lg flex flex-col gap-3 overflow-y-auto form`}
                     onSubmit={handleSubmit}
                 >
-                    {error === ""?
+                    {error === "" ? (
                         <h1 className="text-2xl text-center">Sign Up</h1>
-                        :
-                        <h1 className="text-2xl text-center text-red-500">{error}</h1>
-                    }
+                    ) : (
+                        <h1 className="text-2xl text-center text-red-500">
+                            {error}
+                        </h1>
+                    )}
                     <div>
                         <label htmlFor="category">Category</label>
                         <select
@@ -76,9 +83,13 @@ export default function Page() {
                             onChange={handleFormDataChange}
                             required
                         >
-                            <option value="select" disabled>Select</option>
+                            <option value="select" disabled>
+                                Select
+                            </option>
                             {UserCategories.map((elem, index) => (
-                                <option key={index} value={elem}>{capitalize(elem)}</option>
+                                <option key={index} value={elem}>
+                                    {capitalize(elem)}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -124,7 +135,7 @@ export default function Page() {
                             type="number"
                             name="mobile"
                             id="mobile"
-                            value={formData.mobile === 0? "" : formData.mobile}
+                            value={formData.mobile === 0 ? "" : formData.mobile}
                             onChange={handleFormDataChange}
                             placeholder="Enter your mobile number"
                             required
@@ -147,13 +158,16 @@ export default function Page() {
                         className="bg-tertiary-color text-white p-2 rounded-lg font-bold disabled:bg-gray-400"
                         disabled={isLoading}
                     >
-                        {isLoading? "Trying..." : "Sign up"}
+                        {isLoading ? "Trying..." : "Sign up"}
                     </button>
                     <span className="mt-4 text-center font-bold">
-                        Have an account? <Link className="text-tertiary-color" href="/">Login</Link> 
+                        Have an account?{" "}
+                        <Link className="text-tertiary-color" href="/">
+                            Login
+                        </Link>
                     </span>
                 </form>
             </div>
         </>
     );
-};
+}
