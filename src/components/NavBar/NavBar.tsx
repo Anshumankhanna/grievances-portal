@@ -17,6 +17,7 @@ export default function NavBar() {
             const path = await getBasePath();
 
             if (path.error) {
+                setBasePath("/");
                 return ;
             }
 
