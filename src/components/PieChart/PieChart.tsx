@@ -18,16 +18,17 @@ export default function PieChart({ data }: { data: PieChartDataType[] }) {
 	}, []).map((elem, _, arr) => `${elem.color} 0 ${elem.portion / (arr.at(-1)?.portion ?? 1) * 100}%`);
 
 	return (
-		<figure className="flex flex-row place-content-center gap-8">
+		<figure className="flex flex-row place-content-center gap-8 min-h-60">
 			<div style={{
-				maxHeight: "auto",
-				aspectRatio: "1",
-				borderRadius: "50%",
-				backgroundImage: `conic-gradient(
-					from 90deg,
-					${values.join(",")}
-				)`
-			}}></div>
+					minHeight: "100%",
+					aspectRatio: "1",
+					borderRadius: "50%",
+					backgroundImage: `conic-gradient(
+						from 90deg,
+						${values.join(",")}
+					)`
+				}}
+			></div>
 			<figcaption className="flex flex-col justify-center gap-3">
 				{data.map((elem, index) => (
 					<span key={index} style={{
@@ -36,5 +37,5 @@ export default function PieChart({ data }: { data: PieChartDataType[] }) {
 				))}
 			</figcaption>
 		</figure>
-	)
-}
+	);
+};

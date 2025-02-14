@@ -19,7 +19,7 @@
 }
 
 .table-grid {
-    @apply grid rounded-md overflow-hidden;
+    @apply grid rounded-md overflow-hidden min-w-[800px];
 
     & > div {
         @apply grid;

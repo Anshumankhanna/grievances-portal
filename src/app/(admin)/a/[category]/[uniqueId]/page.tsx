@@ -76,12 +76,12 @@ export default function AdminPage() {
 
     return (
         <div
-            className="flex flex-grow flex-col
+            className="flex items-start flex-grow flex-col
                 text-black
             "
         >
             {/* this is the nav-strip */}
-            <div className="h-24 flex justify-between items-center px-10 py-5">
+            <div className="min-h-24 w-full flex flex-col gap-y-3 sm:gap-y-0 sm:flex-row justify-between items-center px-3 sm:px-10 py-5">
                 <div className="flex flex-col justify-between h-full text-xl">
                     <div>
                         <span className="font-bold">Name:</span> {userData.name}
@@ -90,7 +90,7 @@ export default function AdminPage() {
                         <span className="font-bold">ID:</span> <span className="text-blue-400">{userData.uniqueId}</span>
                     </div>
                 </div>
-                <div className="rounded-lg grid grid-cols-[1fr_2fr_1fr] gap-x-3">
+                <div className="rounded-lg grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-[1fr_2fr_1fr] gap-y-2 sm:gap-x-3">
                     <select value={filter} name="filter" id="filter" onChange={(event: React.ChangeEvent<HTMLSelectElement>) => setFilter(event.target.value as FilterType)}>
                         <option value="selected" disabled={filter !== "selected"}>Selected</option>
                         <option value="status">Status</option>
@@ -115,7 +115,7 @@ export default function AdminPage() {
                     <button className="text-white bg-tertiary-color p-2 rounded-lg font-bold hover:underline" type="button" onClick={filterData}>Filter</button>
                 </div>
             </div>
-            <div className="flex-grow h-72 overflow-y-auto p-3">
+            <div className="flex-grow h-72 max-w-full overflow-auto p-3">
                 <div
                     className={styles["table-grid"]}
                 >

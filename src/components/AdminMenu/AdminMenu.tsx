@@ -2,7 +2,8 @@
 
 import { useBasePathContext } from "@/context/BasePathContext";
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const regex: RegExp = /^\/a\/d\/[0-9]{11}/;
 
@@ -23,6 +24,13 @@ export default function AdminMenu() {
     const [linkState, setLinkState] = useState<LinkStateType>({ ...DefaultLinkState, dashboard: true });
     const { basePath } = useBasePathContext();
     const isDevAdminPath = regex.test(basePath);
+    const currentPath = usePathname();
+    
+    useEffect(() => {
+        if (currentPath.endsWith("profile")) {
+            setLinkState({...DefaultLinkState, profile: true});
+        }
+    }, []);  // eslint-disable-line
 
     return (
         <div className="menu-div">

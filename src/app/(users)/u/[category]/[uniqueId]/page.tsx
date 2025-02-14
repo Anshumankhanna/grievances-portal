@@ -23,7 +23,7 @@ function ComplaintsComponent() {
     const [arrowOrientation, setArrowOrientation] = useState(true);    // "true" means upright, "false" means down.
 
     return (
-        <div className="flex-grow h-72 overflow-y-auto p-3">
+        <div className="flex-grow h-72 overflow-auto p-3">
             <div className={styles["table-grid"]}>
                 <div>
                     <div>
@@ -64,15 +64,15 @@ function ComplaintsComponent() {
                 ))}
             </div>
         </div>
-    )
+    );
 };
 function BlankComponent({ message }: { message: string }) {
     return (
         <div className="bg-slate-200 flex-grow rounded-lg mb-3 p-3 text-3xl text-center text-gray-500">
             {message}
         </div>
-    )
-}
+    );
+};
 
 export default function UserPage() {
     const { complaints, setComplaints } = useUserSideComplaintsContext();
@@ -146,7 +146,8 @@ export default function UserPage() {
         <div
             className="flex flex-grow flex-col
                 text-black
-                [&_>_div]: px-10
+                [&_>_div]:px-4
+                [&_>_div]:sm:px-10
             "
         >
             {/* this is the nav-strip */}

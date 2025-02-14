@@ -91,7 +91,7 @@ export default function Import() {
 	}
 
 	return (
-		<div className="size-full flex flex-col">
+		<div className="size-full flex-grow flex flex-col">
 			{/* this div will display import type */}
 			<div className="flex h-11 bg-gray-500 font-bold text-xl">
 				<div

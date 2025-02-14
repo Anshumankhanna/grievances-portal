@@ -19,11 +19,10 @@
 }
 
 .table-grid {
-    @apply grid rounded-md overflow-hidden;
+    @apply grid rounded-md overflow-hidden min-w-[800px];
 
     & > div {
-        @apply grid;
-        grid-template-columns: 1fr 3fr 7fr 2fr 2fr;
+        @apply grid grid-cols-[1fr_3fr_7fr_2fr_2fr];
 
         & > div {
             @apply p-1 border border-r-slate-400;

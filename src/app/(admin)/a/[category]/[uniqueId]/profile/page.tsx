@@ -8,6 +8,7 @@ import { ComplaintDataUserType } from "@/actions/getUserComplaints";
 import verifyDetails from "@/actions/verifyDetails";
 import PieChart from "@/components/PieChart/PieChart";
 import { AdminType, UserType } from "@/models";
+import capitalize from "@/utils/capitalize";
 import getComplaints from "@/utils/getComplaints";
 import getMyDetails from "@/utils/getMyDetails";
 import statusColor from "@/utils/statusColor";
@@ -39,20 +40,23 @@ function PasswordComponent({
     handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }) {
     return (
-        <div className="flex gap-2 border border-black rounded-lg overflow-hidden pr-2 bg-white">
-            <input
-                className="rounded-none border-t-0 border-l-0 border-b-0 border-gray-400"
-                type={state? "text" : "password"}
-                value={inputValue}
-                name={name}
-                id={name}
-                onChange={handlePasswordChange}
-                required
-            />
-            <button type="button" onClick={stateChangeHandler} name={name}>
-                <Image src={state? "/images/eye-slash-solid.svg" : "/images/eye-solid.svg"} alt="Show" width={20} height={20} />
-            </button>
-        </div>
+        <>
+            <label htmlFor={name}>{capitalize(name)} Password:</label>
+            <div className="flex gap-2 border border-black rounded-lg overflow-hidden pr-2 bg-white">
+                <input
+                    className="rounded-none border-t-0 border-l-0 border-b-0 border-gray-400"
+                    type={state? "text" : "password"}
+                    value={inputValue}
+                    name={name}
+                    id={name}
+                    onChange={handlePasswordChange}
+                    required
+                />
+                <button type="button" onClick={stateChangeHandler} name={name}>
+                    <Image src={state? "/images/eye-slash-solid.svg" : "/images/eye-solid.svg"} alt="Show" width={20} height={20} />
+                </button>
+            </div>
+        </>
     )
 }
 
@@ -178,22 +182,20 @@ export default function Profile() {
 
     return (
         <div
-            className="grid grid-cols-2 size-full p-5 justify-between relative"
+            className="flex flex-col sm:grid sm:grid-cols-2 flex-wrap gap-y-8 size-full p-5 justify-between relative"
         >
-            <h1 className="text-4xl underline text-center font-mono font-bold text-primary-color col-span-2">Profile</h1>
-            <PieChart data={[
-                {
-                    name: "Resolved",
-                    color: statusColor("resolved"),
-                    portion: resolved
-                },
-                {
-                    name: "Unresolved",
-                    color: statusColor("unresolved"),
-                    portion: unresolved
-                }
-            ]} />
-            <div className="h-fit grid grid-cols-2 gap-3 [&_>_div]:bg-gray-300 [&_>_div]:grid [&_>_div]:grid-cols-2 [&_>_div]:items-center [&_>_*]:rounded-lg [&_>_*]:p-2">
+            <h1 className="text-4xl underline text-center font-bold text-tertiary-color w-full sm:col-span-2">Profile</h1>
+            
+            <div className="
+                grid grid-cols-2 gap-3
+                h-fit
+                [&_>_div]:grid [&_>_div]:grid-cols-2 [&_>_div]:items-center
+                [&_>_*]:p-2
+                [&_>_div]:bg-gray-300
+                [&_>_*]:break-words
+                [&_>_*]:rounded-lg
+                "
+            >
                 {profileData !== null &&
                     <>
                         <div>
@@ -230,15 +232,25 @@ export default function Profile() {
                     </>
                 }
             </div>
+            <PieChart data={[
+                {
+                    name: "Resolved",
+                    color: statusColor("resolved"),
+                    portion: resolved
+                },
+                {
+                    name: "Unresolved",
+                    color: statusColor("unresolved"),
+                    portion: unresolved
+                }
+            ]} />
             <dialog className="absolute-center bg-panel-background border border-black p-4 rounded-lg" open={dialogState}>
                 <form className="grid grid-cols-[1fr_2fr] gap-y-5 items-center" onSubmit={changeUserPassword}>
                     <h1 className="text-4xl underline text-tertiary-color col-span-2 text-center">Change Password</h1>
                     <label htmlFor="oldPassword">Old Password:</label>
-                    <PasswordComponent name="old" inputValue={passwords.old} state={passwordState.old} stateChangeHandler={handlePasswordStateChange} handlePasswordChange={handlePasswordChange} />
-                    <label htmlFor="oldPassword">New Password:</label>
-                    <PasswordComponent name="new" inputValue={passwords.new} state={passwordState.new} stateChangeHandler={handlePasswordStateChange} handlePasswordChange={handlePasswordChange} />
-                    <label htmlFor="oldPassword">Confirm Password:</label>
-                    <PasswordComponent name="newAgain" inputValue={passwords.newAgain} state={passwordState.newAgain} stateChangeHandler={handlePasswordStateChange} handlePasswordChange={handlePasswordChange} />
+                    {Object.keys(passwords).map((elem, index) => (
+                        <PasswordComponent key={index} name={elem} inputValue={passwords[elem as keyof PasswordsType]} state={passwordState[elem as keyof PasswordStateType]} stateChangeHandler={handlePasswordStateChange} handlePasswordChange={handlePasswordChange} />
+                    ))}
                     <div className="col-span-2 grid grid-cols-2 gap-x-4">
                         <button
                             className="rounded-lg p-2 bg-tertiary-color text-white font-bold disabled:bg-gray-500"

@@ -19,7 +19,7 @@ export default function UserSideComplaintsContextProvider({ children }: Readonly
 		<UserSideComplaintsContext.Provider value={{ complaints, setComplaints }}>
 			{children}
 		</UserSideComplaintsContext.Provider>
-	)
+	);
 };
 
 export function useUserSideComplaintsContext(): UserSideComplaintsContextValueType {

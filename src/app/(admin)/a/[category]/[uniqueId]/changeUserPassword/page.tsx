@@ -51,8 +51,8 @@ export default function ChangeUserPasswordPage() {
 	};
 
 	return (
-		<div className="flex size-full justify-center items-center">
-			<form className="grid grid-cols-2 gap-y-3 size-fit" onSubmit={handleSubmit}>
+		<div className="flex size-full flex-grow justify-center sm:items-center">
+			<form className="grid grid-cols-2 gap-y-3 size-fit p-3 sm:shadow rounded-lg" onSubmit={handleSubmit}>
 				<h1 className="col-span-2 text-center text-2xl underline text-primary-color">Change User Password</h1>
 				<label htmlFor="uniqueId">Unique ID:</label>
 				<input type="text" name="uniqueId" id="uniqueId" value={data.uniqueId} onChange={handleDataChange} />

@@ -10,7 +10,15 @@ export default function UserLayout({
     return (
         <ProfileInformationContextProvider>
             <UserSideComplaintsContextProvider>
-                <div className="h-full flex items-center justify-start rounded-lg bg-panel-background overflow-hidden [&_>_*]:h-full">
+                <div className="
+                    flex flex-col sm:flex-row justify-start
+                    h-full
+                    rounded-lg
+                    bg-panel-background
+                    overflow-auto
+                    [&_>_*]:w-full [&_>_*]:sm:w-auto [&_>_*]:sm:h-full
+                    "
+                >
                     <UserMenu />
                     {children}
                 </div>
