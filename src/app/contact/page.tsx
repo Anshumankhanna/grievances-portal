@@ -25,6 +25,30 @@ export default function ContactPage() {
                 <div>Mr. Manoj Malik</div>
                 <div>Member</div>
                 <div>manojmalik@msit.in</div>
+                <div>5</div>
+                <div>Pradyuman Pandey</div>
+                <div>Student Representative</div>
+                <div>
+                    (04296303121)
+                    9654681717
+                    pradyumnpandey11@gmail.com
+                </div>
+                <div>6</div>
+                <div>Ankush Kumar</div>
+                <div>Student Representative</div>
+                <div>
+                    (04396303121)
+                    9968900846
+                    ankushkumar11903@gmail.com
+                </div>
+                <div>7</div>
+                <div>Shruti Verma</div>
+                <div>Student Representative</div>
+                <div>
+                    (03996303121)
+                    8800453135
+                    vshruti186@gmail.com
+                </div>
             </div>
         </div>
     );
