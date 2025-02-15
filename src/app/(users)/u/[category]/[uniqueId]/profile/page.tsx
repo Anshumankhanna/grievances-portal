@@ -242,7 +242,7 @@ export default function Profile() {
                     portion: unresolved
                 }
             ]} />
-            <dialog className="absolute-center bg-panel-background border border-black p-4 rounded-lg" open={dialogState}>
+            <dialog className="absolute-center w-full sm:w-auto bg-panel-background border border-black p-4 rounded-lg" open={dialogState}>
                 <form className="grid grid-cols-[1fr_2fr] gap-y-5 items-center" onSubmit={changeUserPassword}>
                     <h1 className="text-4xl underline text-tertiary-color col-span-2 text-center">Change Password</h1>
                     {Object.keys(passwords).map((elem, index) => (

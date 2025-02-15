@@ -1,8 +1,9 @@
 "use client";
 
 import { useBasePathContext } from "@/context/BasePathContext";
+import { getSession } from "next-auth/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type LinkStateType = {
@@ -17,9 +18,18 @@ const DefaultLinkState: LinkStateType = {
 export default function UserMenu() {
     const [linkState, setLinkState] = useState<LinkStateType>({ ...DefaultLinkState, dashboard: true });
     const { basePath } = useBasePathContext();
+    const router = useRouter();
     const currentPath = usePathname();
 
     useEffect(() => {
+        (async () => {
+            const session = await getSession();
+            
+            if (session === null) {
+                router.push("/");
+            }
+        })();
+
         if (currentPath.endsWith("profile")) {
             setLinkState({...DefaultLinkState, profile: true});
         }

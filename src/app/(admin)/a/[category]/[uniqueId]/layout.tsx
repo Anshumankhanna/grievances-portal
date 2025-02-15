@@ -3,7 +3,7 @@ import ProfileInformationContextProvider from "@/context/ProfileInformationConte
 import { ChildrenType } from "@/types/childrenType";
 import AdminSideComplaintsContextProvider from "./AdminSideComplaintsContext";
 
-export default function UserLayout({
+export default async function UserLayout({
     children
 }: ChildrenType
 ) {
@@ -24,5 +24,5 @@ export default function UserLayout({
                 </div>
             </AdminSideComplaintsContextProvider>
         </ProfileInformationContextProvider>
-    )
+    );
 };
