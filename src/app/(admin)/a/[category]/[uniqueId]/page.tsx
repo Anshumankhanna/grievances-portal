@@ -15,9 +15,16 @@ import Image from "next/image";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { StatusType } from "@/models";
-import { BlankComponent } from "@/app/(users)/u/[category]/[uniqueId]/page";
 
 type FilterType = "status" | "uniqueId" | "name" | "email" | "mobile" | "selected";
+
+function BlankComponent({ message }: { message: string }) {
+    return (
+        <div className="bg-slate-200 flex-grow rounded-lg mb-3 p-3 text-3xl text-center text-gray-500">
+            {message}
+        </div>
+    );
+};
 
 export default function AdminPage() {
     const { complaints, setComplaints } = useAdminSideComplaintsContext();

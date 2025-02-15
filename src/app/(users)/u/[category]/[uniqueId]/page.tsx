@@ -66,7 +66,7 @@ function ComplaintsComponent() {
         </div>
     );
 };
-export function BlankComponent({ message }: { message: string }) {
+function BlankComponent({ message }: { message: string }) {
     return (
         <div className="bg-slate-200 flex-grow rounded-lg mb-3 p-3 text-3xl text-center text-gray-500">
             {message}
@@ -217,5 +217,5 @@ export default function UserPage() {
             </div>
             {complaints.length === 0 ? <BlankComponent message={loadingComplaints? "Loading..." : "No complaints yet"} /> : <ComplaintsComponent />}
         </div>
-    )
+    );
 };
