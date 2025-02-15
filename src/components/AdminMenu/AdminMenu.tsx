@@ -11,12 +11,14 @@ type LinkStateType = {
     dashboard: boolean;
     profile: boolean;
     import: boolean;
+    export: boolean;
     changeUserPassword: boolean;
 }
 const DefaultLinkState = {
     dashboard: false,
     profile: false,
     import: false,
+    export: false,
     changeUserPassword: false
 };
 
@@ -29,6 +31,8 @@ export default function AdminMenu() {
     useEffect(() => {
         if (currentPath.endsWith("profile")) {
             setLinkState({...DefaultLinkState, profile: true});
+        } else if (currentPath.endsWith("changeUserPassword")) {
+            setLinkState({...DefaultLinkState, changeUserPassword: true});
         }
     }, []);  // eslint-disable-line
 
@@ -40,9 +44,9 @@ export default function AdminMenu() {
             <Link href={`${basePath}/profile`} className={linkState.profile? "text-tertiary-color bg-panel-background" : "bg-tertiary-color text-panel-background"} onClick={() => setLinkState({...DefaultLinkState, profile: true})}>
                 Profile
             </Link>
-            <Link href={`${basePath}/import`} className={linkState.import? "text-tertiary-color bg-panel-background" : "bg-tertiary-color text-panel-background"} onClick={() => setLinkState({...DefaultLinkState, import: true})}>
+            {/* <Link href={`${basePath}/import`} className={linkState.import? "text-tertiary-color bg-panel-background" : "bg-tertiary-color text-panel-background"} onClick={() => setLinkState({...DefaultLinkState, import: true})}>
                 Import
-            </Link>
+            </Link> */}
             {/* <Link href={`${basePath}/export`}>
                 Export
             </Link> */}

@@ -5,8 +5,11 @@ import { UserType } from "@/models";
 import Complaint, { ComplaintType } from "@/models/Complaint";
 import { OutputType } from "@/types/outputType";
 
+const UserFieldsToFetch = ["category", "uniqueId", "name", "mobile", "email", "createdAt"] as const;
+type UserFieldsToFetchType = typeof UserFieldsToFetch[number];
+
 export type ComplaintDataAdminType = Pick<ComplaintType, "subject" | "description" | "status" | "createdAt"> & {
-    user: Pick<UserType, "uniqueId" | "name" | "email" | "mobile" | "createdAt">
+    user: Pick<UserType, UserFieldsToFetchType>
 }
 
 export default async function getComplaints(): Promise<OutputType<ComplaintDataAdminType[]>> {
@@ -22,7 +25,7 @@ export default async function getComplaints(): Promise<OutputType<ComplaintDataA
         .find()
         .populate({
             path: "user",
-            select: "uniqueId name mobile email createdAt"
+            select: UserFieldsToFetch.join(" ")
         })
         .select("-_id -__v");
 
@@ -34,6 +37,7 @@ export default async function getComplaints(): Promise<OutputType<ComplaintDataA
         for (const complaint of complaints) {
             output.result.push({
                 user: {
+                    category: complaint.user.category,
                     uniqueId: complaint.user.uniqueId,
                     name: complaint.user.name,
                     email: complaint.user.email,

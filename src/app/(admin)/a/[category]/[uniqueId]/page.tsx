@@ -12,6 +12,10 @@ import { useBasePathContext } from "@/context/BasePathContext";
 import { useAdminSideComplaintsContext } from "./AdminSideComplaintsContext";
 import orderComplaints from "@/utils/orderComplaints";
 import Image from "next/image";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { StatusType } from "@/models";
+import { BlankComponent } from "@/app/(users)/u/[category]/[uniqueId]/page";
 
 type FilterType = "status" | "uniqueId" | "name" | "email" | "mobile" | "selected";
 
@@ -25,6 +29,8 @@ export default function AdminPage() {
         uniqueId: "",
         name: ""
     });
+    const [loadingComplaints, setLoadingComplaints] = useState(true);
+    
     const [displayComplaintData, setDisplayComplaintData] = useState<ComplaintDataAdminType[]>([]);
     const [statusUpdated, setStatusUpdated] = useState(false);
     const [filter, setFilter] = useState<FilterType>("selected");
@@ -59,6 +65,7 @@ export default function AdminPage() {
             orderComplaints(complaints.result, "desc");
             setComplaints(complaints.result);
             setDisplayComplaintData(complaints.result);
+            setLoadingComplaints(false);
         })()
     }, [statusUpdated, setComplaints]);
 
@@ -67,12 +74,62 @@ export default function AdminPage() {
             return ;
         }
         if (filter === "status") {
-            setDisplayComplaintData(complaints.filter((elem) => elem.status === filterValue));
+            setDisplayComplaintData(complaints.filter((elem) => elem.status.toLowerCase() === filterValue.toLowerCase()));
             return ;
         }
 
-        setDisplayComplaintData(complaints.filter((elem) => elem.user[filter] === filterValue));
+        setDisplayComplaintData(complaints.filter((elem) => elem.user[filter].toString().toLowerCase() === filterValue.toLowerCase()));
     };
+    const generatePDF = () => {
+        const pdf = new jsPDF();
+    
+        // Add Title
+        pdf.setFontSize(18);
+        pdf.text("Complaint Report", 14, 20);
+    
+        // Table Headers
+        const tableHeaders = [
+            ["S.No", "User", "Subject", "Description", "Status", "Created"]
+        ];
+    
+        // Table Data with Wrapped Description
+        const tableData = displayComplaintData.map((complaint, index) => [
+            index + 1,
+            [capitalize(complaint.user.category), complaint.user.uniqueId, complaint.user.name, complaint.user.email, complaint.user.mobile].join("\n"),
+            complaint.subject,
+            pdf.splitTextToSize(complaint.description, 70), // Wrap description properly
+            capitalize(complaint.status),
+            complaint.createdAt.toLocaleString("en-IN"),
+        ]);
+    
+        // Generate Table
+        autoTable(pdf, {
+            head: tableHeaders,
+            body: tableData,
+            startY: 30, // Start after the title
+            styles: { fontSize: 10, cellPadding: 2 },
+            headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: "bold" }, // Blue header
+            alternateRowStyles: { fillColor: [240, 240, 240] }, // Light gray alternate rows
+            columnStyles: {
+                2: { cellWidth: 20 }, // Increase Description column width
+                3: { cellWidth: 70 }, // Increase Description column width
+            },
+            didParseCell: function (data) {
+                if (data.column.index === 4) { // "Status" Column
+                    const status = data.cell.text[0].toLowerCase() as StatusType;
+
+                    if (status === "resolved") {
+                        data.cell.styles.textColor = [0, 128, 0]; // Green for resolved
+                    } else if (status === "unresolved") {
+                        data.cell.styles.textColor = [255, 0, 0]; // Red for unresolved
+                    }
+                }
+            }
+        });
+    
+        // Save PDF
+        pdf.save("complaints_report.pdf");
+    };      
 
     return (
         <div
@@ -81,7 +138,7 @@ export default function AdminPage() {
             "
         >
             {/* this is the nav-strip */}
-            <div className="min-h-24 w-full flex flex-col gap-y-3 sm:gap-y-0 sm:flex-row justify-between items-center px-3 sm:px-10 py-5">
+            <div className="min-h-24 w-full flex flex-col gap-y-3 sm:gap-y-0 sm:flex-row sm:gap-x-3 justify-between items-center px-3 sm:px-10 py-5">
                 <div className="flex flex-col justify-between h-full text-xl">
                     <div>
                         <span className="font-bold">Name:</span> {userData.name}
@@ -90,16 +147,18 @@ export default function AdminPage() {
                         <span className="font-bold">ID:</span> <span className="text-blue-400">{userData.uniqueId}</span>
                     </div>
                 </div>
-                <div className="rounded-lg grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-[1fr_2fr_1fr] gap-y-2 sm:gap-x-3">
-                    <select value={filter} name="filter" id="filter" onChange={(event: React.ChangeEvent<HTMLSelectElement>) => setFilter(event.target.value as FilterType)}>
+                <div className="rounded-lg min-h-11 grid grid-cols-3 sm:grid-cols-[1fr_2fr_1fr] gap-y-2 border border-gray-400 overflow-clip">
+                    <select className="border-0" value={filter} name="filter" id="filter" onChange={(event: React.ChangeEvent<HTMLSelectElement>) => setFilter(event.target.value as FilterType)}>
                         <option value="selected" disabled={filter !== "selected"}>Selected</option>
                         <option value="status">Status</option>
+                        <option value="category">Category</option>
                         <option value="uniqueId">ID</option>
                         <option value="name">Name</option>
                         <option value="email">Email</option>
                         <option value="mobile">Mobile</option>
                     </select>
                     <input
+                        className="border-0 border-l border-black rounded-none"
                         type="text"
                         name="filterinput"
                         id="filterinput"
@@ -112,68 +171,73 @@ export default function AdminPage() {
                             setFilterValue(event.target.value);
                         }}
                     />
-                    <button className="text-white bg-tertiary-color p-2 rounded-lg font-bold hover:underline" type="button" onClick={filterData}>Filter</button>
+                    <button className="text-white border-0 bg-tertiary-color px-3 font-bold hover:underline" type="button" onClick={filterData}>Filter</button>
                 </div>
+                <button type="button" className="text-white bg-tertiary-color px-6 py-2 rounded-lg font-bold hover:underline" onClick={generatePDF}>Export Data</button>
             </div>
-            <div className="flex-grow h-72 max-w-full overflow-auto p-3">
-                <div
-                    className={styles["table-grid"]}
-                >
-                    <div>
+            <div className="flex-grow h-72 w-full max-w-full overflow-auto p-3">
+                {displayComplaintData.length === 0?
+                    <BlankComponent message={loadingComplaints? "Loading..." : "No complaints yet"} />
+                    :
+                    <div className={styles["table-grid"]}>
                         <div>
-                            S.no.
+                            <div>
+                                S.no.
+                            </div>
+                            <div>
+                                User
+                            </div>
+                            <div>
+                                Subject
+                            </div>
+                            <div>
+                                Description
+                            </div>
+                            <div>
+                                Status
+                            </div>
+                            <div className="flex justify-around">
+                                Created
+                                <Image src="/images/angle-up-solid.svg" width={12} height={12}  alt="Arrow" className={`cursor-pointer ${arrowOrientation? "rotate-0" : "rotate-180"}`} onClick={() => {
+                                    setArrowOrientation(!arrowOrientation);
+                                    orderComplaints(complaints, arrowOrientation? "asc" : "desc");
+                                }} />
+                            </div>
                         </div>
-                        <div>
-                            User
-                        </div>
-                        <div>
-                            Subject
-                        </div>
-                        <div>
-                            Description
-                        </div>
-                        <div>
-                            Status
-                        </div>
-                        <div className="flex justify-around">
-                            Created
-                            <Image src="/images/angle-up-solid.svg" width={12} height={12} alt="Arrow" className={`cursor-pointer ${arrowOrientation? "rotate-0" : "rotate-180"}`} onClick={() => {
-                                setArrowOrientation(!arrowOrientation);
-                                orderComplaints(complaints, arrowOrientation? "asc" : "desc");
-                            }} />
-                        </div>
+                        {displayComplaintData.map((complaint, index) => (
+                            <div key={index}>
+                                <div>{index + 1}</div>
+                                <div className="grid grid-cols-2 p-0 size-full items-center [&_>_div]:border-b [&_>_div]:border-black [&_>_div]:size-full [&_>_div:nth-last-child(-n+2)]:border-b-0">
+                                    <div>Category:</div>
+                                    <div>{capitalize(complaint.user.category)}</div>
+                                    <div>ID:</div>
+                                    <div>{complaint.user.uniqueId}</div>
+                                    <div>Name:</div>
+                                    <div>{complaint.user.name}</div>
+                                    {/* Email should be a link */}
+                                    <div>Email:</div>
+                                    <div className="text-blue-500 underline"><a href={`mailto:${complaint.user.email}`}>{complaint.user.email}</a></div>
+                                    <div>Mobile:</div>
+                                    <div>{complaint.user.mobile}</div>
+                                </div>
+                                <div>{complaint.subject}</div>
+                                <div>{complaint.description}</div>
+                                <div
+                                    className="font-bold break-normal cursor-pointer" style={{
+                                        color: statusColor(complaint.status)
+                                    }}
+                                    onClick={async () => {
+                                        await changeComplaintStatus(complaint.createdAt, complaint.status === "resolved"? "unresolved" : "resolved");
+                                        setStatusUpdated(!statusUpdated);
+                                    }}
+                                >
+                                    {capitalize(complaint.status)}
+                                </div>
+                                <div>{complaint.createdAt.toLocaleString("en-IN")}</div>
+                            </div>
+                        ))}
                     </div>
-                    {displayComplaintData.map((complaint, index) => (
-                        <div key={index}>
-                            <div>{index + 1}</div>
-                            <div className="grid grid-cols-2 p-0 size-full items-center [&_>_div]:border-b [&_>_div]:border-black [&_>_div]:size-full [&_>_div:nth-last-child(-n+2)]:border-b-0">
-                                <div>ID:</div>
-                                <div>{complaint.user.uniqueId}</div>
-                                <div>Name:</div>
-                                <div>{complaint.user.name}</div>
-                                {/* Email should be a link */}
-                                <div>Email:</div>
-                                <div className="text-blue-500 underline"><a href={`mailto:${complaint.user.email}`}>{complaint.user.email}</a></div>
-                                <div>Mobile:</div>
-                                <div>{complaint.user.mobile}</div>
-                            </div>
-                            <div>{complaint.subject}</div>
-                            <div>{complaint.description}</div>
-                            <div
-                                className="font-bold break-normal cursor-pointer" style={{
-                                    color: statusColor(complaint.status)
-                                }}
-                                onClick={async () => {
-                                    await changeComplaintStatus(complaint.createdAt, complaint.status === "resolved"? "unresolved" : "resolved");
-                                    setStatusUpdated(!statusUpdated);
-                                }}
-                            >
-                                {capitalize(complaint.status)}
-                            </div>
-                            <div>{complaint.createdAt.toLocaleString("en-IN")}</div>
-                        </div>
-                    ))}
-                </div>
+                }
             </div>
         </div>
     )

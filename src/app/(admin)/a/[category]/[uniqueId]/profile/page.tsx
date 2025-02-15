@@ -270,5 +270,5 @@ export default function Profile() {
                 </form>
             </dialog>
         </div>
-    )
+    );
 };

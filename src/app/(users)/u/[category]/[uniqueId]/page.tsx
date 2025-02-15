@@ -66,7 +66,7 @@ function ComplaintsComponent() {
         </div>
     );
 };
-function BlankComponent({ message }: { message: string }) {
+export function BlankComponent({ message }: { message: string }) {
     return (
         <div className="bg-slate-200 flex-grow rounded-lg mb-3 p-3 text-3xl text-center text-gray-500">
             {message}

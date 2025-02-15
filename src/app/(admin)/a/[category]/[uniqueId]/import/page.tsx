@@ -135,4 +135,4 @@ export default function Import() {
 			</form>
 		</div>
 	);
-}
+};
