@@ -24,7 +24,7 @@ export default function Background({
     }, [imgIndex]);
 
     return (
-        <div className={`${styles.background}`}>
+        <div className={styles.background}>
             <div
                 className="bg-cover bg-center blur-sm absolute-center"
                 style={{
