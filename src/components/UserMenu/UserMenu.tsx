@@ -31,9 +31,11 @@ export default function UserMenu() {
         })();
 
         if (currentPath.endsWith("profile")) {
-            setLinkState({...DefaultLinkState, profile: true});
+            setLinkState({...DefaultLinkState, profile: true });
+        } else {
+            setLinkState({ ...DefaultLinkState, dashboard: true });
         }
-    }, []);  // eslint-disable-line
+    }, [currentPath, router]);
 
     return (
         <div className="menu-div">

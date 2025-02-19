@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import addComplaint, { ComplaintDataFillType } from "@/actions/addComplaint";
-import getMyDetails from "@/utils/getMyDetails";
+import getMyDetails from "@/actions/getMyDetails";
 import getUserComplaints from "@/actions/getUserComplaints";
 import statusColor from "@/utils/statusColor";
 import capitalize from "@/utils/capitalize";

@@ -1,6 +1,6 @@
 "use client";
 
-import { ComplaintDataAdminType } from "@/utils/getComplaints";
+import { ComplaintDataAdminType } from "@/actions/getComplaints";
 import React, { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
 
 type AdminSideComplaintsContextValueType = {

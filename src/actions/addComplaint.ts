@@ -3,7 +3,7 @@
 import { authOptions } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import Complaint, { ComplaintType } from "@/models/Complaint";
-import User from "@/models/User";
+import User, { UserType } from "@/models/User";
 import { OutputType } from "@/types/outputType";
 import { getServerSession } from "next-auth";
 
@@ -26,7 +26,7 @@ export default async function addComplaint(complaintData: ComplaintDataFillType)
     try {
         await connectDB();
         
-        const user = await User.findOne({ uniqueId: session.user.uniqueId }).select("_id complaints");
+        const user = await User.findOne({ uniqueId: session.user.uniqueId }).select<Pick<UserType, "_id" | "complaints">>("_id complaints");
         
         if (user === null) {
             output.error = "User not found";

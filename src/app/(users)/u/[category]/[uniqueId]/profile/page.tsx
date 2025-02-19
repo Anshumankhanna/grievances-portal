@@ -9,7 +9,7 @@ import verifyDetails from "@/actions/verifyDetails";
 import PieChart from "@/components/PieChart/PieChart";
 import { AdminType, UserType } from "@/models";
 import capitalize from "@/utils/capitalize";
-import getMyDetails from "@/utils/getMyDetails";
+import getMyDetails from "@/actions/getMyDetails";
 import statusColor from "@/utils/statusColor";
 import Image from "next/image";
 import React, { useEffect, useState } from "react"

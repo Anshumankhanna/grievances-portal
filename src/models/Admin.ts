@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, Document } from "mongoose";
+import mongoose, { Schema, model, Document, Model } from "mongoose";
 import { UserType } from "./User";
 
 export const AdminCategories = ["admin", "devadmin"] as const;
@@ -69,6 +69,6 @@ const AdminSchema = new Schema<AdminType>(
     }
 );
 
-const Admin = mongoose.models?.Admin || model<AdminType>("Admin", AdminSchema);
+const Admin = mongoose.models?.Admin as Model<AdminType> || model<AdminType>("Admin", AdminSchema);
 
 export default Admin;

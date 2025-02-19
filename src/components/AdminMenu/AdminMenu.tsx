@@ -40,11 +40,13 @@ export default function AdminMenu() {
         })();
 
         if (currentPath.endsWith("profile")) {
-            setLinkState({...DefaultLinkState, profile: true});
+            setLinkState({ ...DefaultLinkState, profile: true });
         } else if (currentPath.endsWith("changeUserPassword")) {
-            setLinkState({...DefaultLinkState, changeUserPassword: true});
+            setLinkState({ ...DefaultLinkState, changeUserPassword: true });
+        } else {
+            setLinkState({ ...DefaultLinkState, dashboard: true });
         }
-    }, []);  // eslint-disable-line
+    }, [currentPath, router]);
 
     return (
         <div className="menu-div">

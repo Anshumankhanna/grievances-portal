@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import getComplaints, { ComplaintDataAdminType } from "@/utils/getComplaints";
+import getComplaints, { ComplaintDataAdminType } from "@/actions/getComplaints";
 import capitalize from "@/utils/capitalize";
-import getMyDetails from "@/utils/getMyDetails";
+import getMyDetails from "@/actions/getMyDetails";
 import statusColor from "@/utils/statusColor";
 import changeComplaintStatus from "@/actions/changeComplaintStatus";
 import { usePathname } from "next/navigation";

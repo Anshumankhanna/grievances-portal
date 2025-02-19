@@ -2,7 +2,7 @@
 
 import { connectDB } from "@/lib/mongodb";
 import { ComplaintType } from "@/models";
-import User from "@/models/User";
+import User, { UserType } from "@/models/User";
 import { OutputType } from "@/types/outputType";
 
 export type ComplaintDataUserType = Pick<ComplaintType, "subject" | "description" | "status" | "createdAt">
@@ -16,7 +16,7 @@ export default async function getUserComplaints(uniqueId: string) {
 	try {
 		await connectDB();
 
-		const user = await User.findOne({ uniqueId }).select("complaints -_id").populate({
+		const user = await User.findOne({ uniqueId }).select<Pick<UserType, "complaints">>("complaints -_id").populate<{ complaints: Pick<ComplaintType, "subject" | "description" | "status" | "createdAt">[] }>({
 			path: "complaints",
 			select: "subject description status createdAt -_id"
 		});

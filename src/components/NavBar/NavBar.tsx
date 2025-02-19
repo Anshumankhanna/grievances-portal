@@ -22,8 +22,12 @@ export default function NavBar() {
             }
 
             setBasePath(path.result);
+
+            if (status === "authenticated") {
+                router.push(path.result);
+            }
         })();
-    }, [setBasePath]);
+    }, [setBasePath, router, status]);
 
     return (
         <div className="

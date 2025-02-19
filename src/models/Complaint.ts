@@ -1,4 +1,4 @@
-import mongoose, { model, ObjectId, Schema } from "mongoose";
+import mongoose, { Model, model, ObjectId, Schema } from "mongoose";
 
 export const StatusValues = ["unresolved", "resolved"] as const;
 export type StatusType = typeof StatusValues[number];
@@ -42,6 +42,6 @@ const ComplaintSchema = new Schema<ComplaintType>(
     }
 );
 
-const Complaint = mongoose.models?.Complaint || model<ComplaintType>("Complaint", ComplaintSchema);
+const Complaint = mongoose.models?.Complaint as Model<ComplaintType> || model<ComplaintType>("Complaint", ComplaintSchema);
 
 export default Complaint;

@@ -34,7 +34,7 @@ export default async function getUserDetails(uniqueId: string, command: "include
 			pipeline.push({ $project: projectFields });
 		}
 
-		const users = await Admin.aggregate(pipeline);
+		const users = await Admin.aggregate<Partial<UserType | AdminType>>(pipeline);
 
 		if (users.length == 0) {
 			output.error = "No user found";
