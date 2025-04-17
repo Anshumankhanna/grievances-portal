@@ -12,6 +12,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import orderComplaints from "@/utils/orderComplaints";
 import { useUserSideComplaintsContext } from "./UserSideComplaintsContext";
+import getBasePath from "@/actions/getBasePath";
 
 const ComplaintDataFillDefault: ComplaintDataFillType = {
     subject: "",
@@ -19,8 +20,21 @@ const ComplaintDataFillDefault: ComplaintDataFillType = {
 };
 
 function ComplaintsComponent() {
+    const currentPath = usePathname();
+    const { setBasePath } = useBasePathContext();
     const { complaints } = useUserSideComplaintsContext();
     const [arrowOrientation, setArrowOrientation] = useState(true);    // "true" means upright, "false" means down.
+
+    useEffect(() => {
+        (async () => {
+            const path = await getBasePath();
+
+            if (path.error || currentPath !== path.result) {
+                setBasePath("/");
+                return ;
+            }
+        })();
+    }, []);
 
     return (
         <div className="flex-grow h-72 overflow-auto p-3">

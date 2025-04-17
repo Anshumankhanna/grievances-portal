@@ -1,15 +1,30 @@
 "use client";
 
+import getBasePath from "@/actions/getBasePath";
 import makeAdmin from "@/actions/makeAdmin";
+import { useBasePathContext } from "@/context/BasePathContext";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function AdminPage() {
+    const currentPath = usePathname();
+    const { setBasePath } = useBasePathContext();
     const [key, setKey] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string>("");
     const router = useRouter();
+
+    useEffect(() => {
+        (async () => {
+            const path = await getBasePath();
+
+            if (path.error || currentPath !== path.result) {
+                setBasePath("/")
+                return ;
+            }
+        })();
+    }, []);
 
     const handleSubmit = async (submitEvent: React.FormEvent<HTMLFormElement>) => {
         submitEvent.preventDefault();
