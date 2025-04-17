@@ -24,7 +24,7 @@ export default function DevadminPage() {
 				return;
 			}
 		})();
-	}, []);
+	}, [currentPath, setBasePath]);
 
 	const handleSubmit = async (
 		submitEvent: React.FormEvent<HTMLFormElement>,

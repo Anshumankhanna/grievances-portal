@@ -34,7 +34,7 @@ function ComplaintsComponent() {
                 return ;
             }
         })();
-    }, []);
+    }, [currentPath, setBasePath]);
 
     return (
         <div className="flex-grow h-72 overflow-auto p-3">

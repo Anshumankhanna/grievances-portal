@@ -24,7 +24,7 @@ export default function AdminPage() {
                 return ;
             }
         })();
-    }, []);
+    }, [currentPath, setBasePath]);
 
     const handleSubmit = async (submitEvent: React.FormEvent<HTMLFormElement>) => {
         submitEvent.preventDefault();
